@@ -1,0 +1,28 @@
+{
+  "name": "remote-downloader-server",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "bsb -make-world",
+    "dev": "bsb -make-world -w",
+    "clean": "bsb -clean-world",
+    "start": "node -r dotenv/config src/index.bs.js"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "bs-platform": "^2.2.2"
+  },
+  "dependencies": {
+    "diskusage": "^0.2.4",
+    "dotenv": "^5.0.1",
+    "download": "github:DCKT/download#feat/filename",
+    "firebase-admin": "^5.10.0",
+    "got": "^8.3.0",
+    "lodash.throttle": "^4.1.1",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.2"
+  }
+}
