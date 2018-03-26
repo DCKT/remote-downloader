@@ -50,7 +50,7 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
           initialState={email: "", password: ""}
           onSubmit=(
             (state, notify) => {
-              Js.log(state);
+              Js.log(state.email);
               /* notify.onSuccess(); */
               /* Submit form and either notify.onSuccess / notify.onFailure */
               ();
@@ -124,7 +124,7 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
                          (
                            form.submitting ?
                              <Loader
-                               size=`Tiny
+                               size=Loader.Tiny
                                isActive=true
                                color="#fff"
                                className=Styles.loader

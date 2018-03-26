@@ -1,12 +1,10 @@
 let component = "Loader" |> ReasonReact.statelessComponent;
 
-[@bs.deriving jsConverter]
-type loaderSize = [
-  | [@bs.as "tiny"] `Tiny
-  | [@bs.as "small"] `Small
-  | [@bs.as "medium"] `Medium
-  | [@bs.as "large"] `Large
-];
+type size =
+  | Tiny
+  | Small
+  | Medium
+  | Large;
 
 module Styles = {
   open Css;
@@ -15,16 +13,16 @@ module Styles = {
       (0, [transform(rotate(deg(45)))]),
       (100, [transform(rotate(deg(405)))]),
     ]);
-  let loader = (~size: option(loaderSize), ~color: option(string)) => {
+  let loader = (~size: option(size), ~color: option(string)) => {
     let (containerSize, borderWidth) =
       switch (size) {
       | None => (40, 3)
       | Some(s) =>
         switch (s) {
-        | `Tiny => (20, 2)
-        | `Small => (40, 3)
-        | `Medium => (80, 4)
-        | `Large => (120, 4)
+        | Tiny => (20, 2)
+        | Small => (40, 3)
+        | Medium => (80, 4)
+        | Large => (120, 4)
         }
       };
     let loaderColor =
@@ -52,7 +50,7 @@ module Styles = {
 let make =
     (
       ~isActive: bool,
-      ~size: option(loaderSize)=?,
+      ~size: option(size)=?,
       ~color: option(string)=?,
       ~className: option(string)=?,
       _children,
