@@ -3,14 +3,12 @@ module Config = {
     | Login
     | Admin
     | NotFound;
-  let routeFromUrl = (url: ReasonReact.Router.url) => {
-    Js.log(url.path);
+  let routeFromUrl = (url: ReasonReact.Router.url) =>
     switch (url.path) {
     | ["login"] => Login
     | [] => Admin
     | _ => NotFound
     };
-  };
   let routeToUrl = (route: route) =>
     switch (route) {
     | Login => "/login"
