@@ -22,19 +22,14 @@ module Styles = {
     style([fontSize(px(28)), fontWeight(700), textAlign(center)]);
   let input =
     style([display(block), marginBottom(px(15)), textAlign(center)]);
-  let submit =
+  let loader =
     style([
-      display(block),
-      margin4(~top=px(25), ~left=auto, ~right=auto, ~bottom=px(0)),
-      background(hex("0288D1")),
-      fontSize(px(20)),
-      color(hex("fff")),
-      padding2(~v=px(10), ~h=px(30)),
-      borderRadius(px(2)),
-      border(px(1), solid, hex("0288D1")),
-      cursor(`pointer),
-      boxShadow(~x=px(0), ~y=px(2), ~blur=px(4), rgba(24, 24, 24, 0.1)),
+      position(absolute),
+      left(px(15)),
+      top(pct(50.)),
+      marginTop(px(-10)),
     ]);
+  let submitButton = style([position(relative), minWidth(px(200))]);
 };
 
 let make = (~isLogged: bool, ~connectUser, _children) => {
@@ -54,9 +49,12 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
         <LoginForm.FormContainer
           initialState={email: "", password: ""}
           onSubmit=(
-            (state, notify) =>
+            (state, notify) => {
+              Js.log(state);
+              /* notify.onSuccess(); */
               /* Submit form and either notify.onSuccess / notify.onFailure */
-              ()
+              ();
+            }
           )>
           ...(
                form =>
@@ -117,14 +115,29 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
                        }
                      )
                    />
-                   <button
-                     className=Styles.submit
-                     disabled=(form.submitting |> Js.Boolean.to_js_boolean)>
-                     (
-                       (form.submitting ? "Submitting..." : "Login")
-                       |> ReasonReact.stringToElement
-                     )
-                   </button>
+                   <Button
+                     _type=`Submit
+                     disabled=(form.submitting |> Js.Boolean.to_js_boolean)
+                     className=Styles.submitButton
+                     content={
+                       <Fragment>
+                         (
+                           form.submitting ?
+                             <Loader
+                               size=`Tiny
+                               isActive=true
+                               color="#fff"
+                               className=Styles.loader
+                             /> :
+                             ReasonReact.nullElement
+                         )
+                         (
+                           (form.submitting ? "Submitting..." : "Login")
+                           |> ReasonReact.stringToElement
+                         )
+                       </Fragment>
+                     }
+                   />
                  </form>
              )
         </LoginForm.FormContainer>
