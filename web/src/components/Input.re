@@ -25,7 +25,8 @@ let make =
     (
       ~value: string,
       ~disabled: Js.boolean,
-      ~type_: inputType,
+      ~_type: inputType,
+      ~placeholder: option(string)=?,
       ~containerClassName: option(string)=?,
       ~inputClassName: option(string)=?,
       ~onBlur,
@@ -45,9 +46,15 @@ let make =
       | None => Styles.input
       | Some(rules) => Styles.input ++ " " ++ rules
       };
+    let customPlaceholder =
+      switch (placeholder) {
+      | None => ""
+      | Some(p) => p
+      };
     <div className=customContainerClassName>
       <input
-        _type=(inputTypeToJs(type_))
+        _type=(inputTypeToJs(_type))
+        placeholder=customPlaceholder
         className=customInputClassName
         value
         disabled

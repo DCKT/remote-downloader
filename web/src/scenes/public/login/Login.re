@@ -20,16 +20,20 @@ module Styles = {
   let form = style([marginTop(px(40))]);
   let title =
     style([fontSize(px(28)), fontWeight(700), textAlign(center)]);
-  let input = style([display(block), marginBottom(px(15))]);
+  let input =
+    style([display(block), marginBottom(px(15)), textAlign(center)]);
   let submit =
     style([
       display(block),
-      background(hex("01579B")),
+      margin4(~top=px(25), ~left=auto, ~right=auto, ~bottom=px(0)),
+      background(hex("0288D1")),
       fontSize(px(20)),
       color(hex("fff")),
-      padding2(~v=px(10), ~h=px(20)),
+      padding2(~v=px(10), ~h=px(30)),
       borderRadius(px(2)),
-      border(px(1), solid, hex("01579B")),
+      border(px(1), solid, hex("0288D1")),
+      cursor(`pointer),
+      boxShadow(~x=px(0), ~y=px(2), ~blur=px(4), rgba(24, 24, 24, 0.1)),
     ]);
 };
 
@@ -45,7 +49,7 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
     <div className=Styles.root>
       <div className=Styles.box>
         <h1 className=Styles.title>
-          (ReasonReact.stringToElement("Login"))
+          (ReasonReact.stringToElement("Welcome"))
         </h1>
         <LoginForm.FormContainer
           initialState={email: "", password: ""}
@@ -61,7 +65,8 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
                    onSubmit=(form.submit |> Formality.Dom.preventDefault)>
                    <Input
                      value=form.state.email
-                     type_=`Email
+                     _type=`Email
+                     placeholder="Email"
                      disabled=(form.submitting |> Js.Boolean.to_js_boolean)
                      containerClassName=Styles.input
                      onChange=(
@@ -87,7 +92,8 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
                    />
                    <Input
                      value=form.state.password
-                     type_=`Password
+                     _type=`Password
+                     placeholder="**********"
                      containerClassName=Styles.input
                      disabled=(form.submitting |> Js.Boolean.to_js_boolean)
                      onChange=(
@@ -115,7 +121,7 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
                      className=Styles.submit
                      disabled=(form.submitting |> Js.Boolean.to_js_boolean)>
                      (
-                       (form.submitting ? "Submitting..." : "Submit")
+                       (form.submitting ? "Submitting..." : "Login")
                        |> ReasonReact.stringToElement
                      )
                    </button>
