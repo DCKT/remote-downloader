@@ -5,6 +5,7 @@
   "dependencies": {
     "bs-css": "^6.5.0",
     "firebase": "^4.12.0",
+    "re-formality": "^0.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "reason-scripts": "0.8.0"

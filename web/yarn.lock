@@ -6189,6 +6189,10 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+re-formality@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/re-formality/-/re-formality-0.6.0.tgz#6dc5c3919f144568e5e01cd74e7d4c89e0a79cc7"
+
 react-dev-utils@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-4.2.1.tgz#9f2763e7bafa1a1b9c52254d2a479deec280f111"
