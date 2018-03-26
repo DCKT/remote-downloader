@@ -27,7 +27,7 @@ let make = _children => {
   render: ({send, state}) => {
     let isLogged = state.isConnected;
 
-    <div>
+
       <Router>
         ...(
              (~currentRoute) => {
@@ -42,6 +42,6 @@ let make = _children => {
                }
            )
       </Router>
-    </div>
+
               }
 };
