@@ -37,7 +37,7 @@ module Styles = {
       borderRight(px(borderWidth), solid, rgba(24, 24, 24, 0.4)),
       borderBottom(px(borderWidth), solid, rgba(24, 24, 24, 0.4)),
       borderLeft(px(borderWidth), solid, rgba(24, 24, 24, 1.)),
-      unsafe("border-left-color", loaderColor ++ " !important"),
+      unsafe("borderLeftColor", loaderColor ++ " !important"),
       borderRadius(pct(100.)),
       transform(rotate(deg(45))),
       animationName(spin),

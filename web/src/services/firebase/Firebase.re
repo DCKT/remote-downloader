@@ -17,9 +17,29 @@ module Database = {
   [@bs.send] external on : (t, ~eventType: string, ~callback: cb) => cb = "";
 };
 
+module User = {
+  type t = {
+    .
+    "email": Js.Nullable.t(string),
+    "displayName": Js.Nullable.t(string),
+  };
+};
+
+module Authentication = {
+  type t;
+  type callback = Js.Nullable.t(User.t) => unit;
+  [@bs.send] external onAuthStateChanged : (t, callback) => t = "";
+  [@bs.send] external signOut : t => t = "";
+  [@bs.send]
+  external signInWithEmailAndPassword :
+    (t, string, string) => Js.Promise.t(unit) =
+    "";
+};
+
 module App = {
   type t;
   [@bs.send] external database : t => Database.t = "";
+  [@bs.send] external auth : t => Authentication.t = "";
 };
 
 [@bs.module "firebase"] external initializeApp : 'a => App.t = "";
@@ -37,3 +57,10 @@ let config =
   };
 
 let app = initializeApp(config);
+
+let authInstance = App.auth(app);
+
+let login = (~email, ~password) =>
+  Authentication.signInWithEmailAndPassword(authInstance, email, password);
+
+let logout = () => Authentication.signOut(authInstance);

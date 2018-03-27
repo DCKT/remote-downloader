@@ -5,30 +5,32 @@ type state = {
 
 type action =
   | ConnectUser
-  | DisconnectUser;
+  | DisconnectUser
+  | SyncApp;
 
 let component = "Root" |> ReasonReact.reducerComponent;
 
 let make = _children => {
   ...component,
   initialState: () => {isConnected: false, isSync: false},
-  didMount: _self =>
-    ReasonReact.Update({
-      isSync: true,
-      isConnected:
-        switch (Localstorage.getItem("isConnected")) {
-        | None => false
-        | Some(_value) => true
-        },
-    }),
+  didMount: self => {
+    Firebase.Authentication.onAuthStateChanged(Firebase.authInstance, user => {
+      switch (Js.Nullable.toOption(user)) {
+      | None => self.send(SyncApp);
+      | Some(u) => self.send(ConnectUser);
+      };
+    });
+    ReasonReact.NoUpdate;
+  },
   reducer: (action, state) =>
     switch (action) {
+    | SyncApp => ReasonReact.Update({ ...state, isSync: true })
     | ConnectUser =>
       ReasonReact.UpdateWithSideEffects(
-        {...state, isConnected: true},
+        {...state, isConnected: true, isSync: true},
         (_self => ReasonReact.Router.push("/")),
       )
-    | DisconnectUser => ReasonReact.Update({...state, isConnected: false})
+    | DisconnectUser => ReasonReact.Update({ isSync: true, isConnected: false})
     },
   render: (self) => {
     let isLogged = self.state.isConnected;
@@ -39,7 +41,7 @@ let make = _children => {
             | false => <Loading />
             | true => switch (currentRoute) {
               | Admin => <Admin isLogged />
-              | Login=> <Login isLogged connectUser=(_ => self.send(ConnectUser)) />
+              | Login => <Login isLogged connectUser=(_ => self.send(ConnectUser)) />
               | NotFound => <NotFound />
             }
           }

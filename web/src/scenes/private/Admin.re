@@ -1,5 +1,10 @@
 let component = ReasonReact.statelessComponent("Admin");
 
+module Styles = {
+  open Css;
+  let root = style([background(hex("F7F8FB")), height(pct(100.))]);
+};
+
 let make = (~isLogged: bool, _children) => {
   ...component,
   didMount: _self => {
@@ -9,5 +14,8 @@ let make = (~isLogged: bool, _children) => {
     ReasonReact.NoUpdate;
   },
   render: _self =>
-    <div> <h1> (ReasonReact.stringToElement("Admin")) </h1> </div>,
+    <div className=Styles.root>
+      <Navbar />
+      <h1> (ReasonReact.stringToElement("Admin")) </h1>
+    </div>,
 };

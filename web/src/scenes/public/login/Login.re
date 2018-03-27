@@ -50,9 +50,18 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
           initialState={email: "", password: ""}
           onSubmit=(
             (state, notify) => {
-              Js.log(state.email);
-              /* notify.onSuccess(); */
-              /* Submit form and either notify.onSuccess / notify.onFailure */
+              Firebase.login(~email=state.email, ~password=state.password)
+              |> Js.Promise.then_(() => {
+                   notify.onSuccess();
+                   connectUser();
+                   Js.Promise.resolve();
+                 })
+              |> Js.Promise.catch(err => {
+                   Js.log(err);
+                   notify.onFailure();
+                   Js.Promise.resolve();
+                 })
+              |> ignore;
               ();
             }
           )>

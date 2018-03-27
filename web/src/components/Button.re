@@ -19,7 +19,7 @@ module Styles = {
     style([
       display(`flex),
       margin4(~top=px(25), ~left=auto, ~right=auto, ~bottom=px(0)),
-      unsafe("background-color", bgColor),
+      unsafe("backgroundColor", bgColor),
       fontSize(px(20)),
       unsafe("color", textColor),
       padding2(~v=px(10), ~h=px(30)),
