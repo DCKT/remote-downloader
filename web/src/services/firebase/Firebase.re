@@ -42,6 +42,24 @@ module App = {
   [@bs.send] external auth : t => Authentication.t = "";
 };
 
+module Model = {
+  [@bs.deriving jsConverter]
+  type status = [
+    | [@bs.as "waiting"] `waiting
+    | [@bs.as "pending"] `pending
+    | [@bs.as "completed"] `completed
+    | [@bs.as "error"] `error
+  ];
+  type file = {
+    .
+    "extract": bool,
+    "folder": string,
+    "id": string,
+    "progress": int,
+    "status": status,
+  };
+};
+
 [@bs.module "firebase"] external initializeApp : 'a => App.t = "";
 
 [@bs.module] external devConfig : string = "./data/dev.json";
