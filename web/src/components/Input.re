@@ -5,6 +5,7 @@ type inputType = [
   | [@bs.as "text"] `Text
   | [@bs.as "password"] `Password
   | [@bs.as "email"] `Email
+  | [@bs.as "url"] `Url
 ];
 
 module Styles = {

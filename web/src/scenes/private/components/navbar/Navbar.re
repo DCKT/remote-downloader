@@ -18,14 +18,28 @@ module Styles = {
       fontWeight(700),
       color(hex("69798F")),
     ]);
+  let addButton =
+    style([
+      position(absolute),
+      right(px(20)),
+      fontSize(px(20)),
+      fontWeight(700),
+      border(px(2), solid, hex("69798F")),
+      borderRadius(px(3)),
+      color(hex("69798F")),
+      cursor(`pointer),
+    ]);
 };
 
-let make = _children => {
+let make = (~showModal, _children) => {
   ...component,
   render: _self =>
     <nav className=Styles.root>
       <h1 className=Styles.title>
         (ReasonReact.stringToElement("Downloads"))
       </h1>
+      <button className=Styles.addButton onClick=showModal>
+        (ReasonReact.stringToElement("+"))
+      </button>
     </nav>,
 };

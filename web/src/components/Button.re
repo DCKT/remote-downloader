@@ -41,8 +41,9 @@ let make =
       ~className: option(string)=?,
       ~backgroundColor: option(string)=?,
       ~color: option(string)=?,
-      ~disabled: Js.boolean,
+      ~disabled: option(Js.boolean)=?,
       ~content: ReasonReact.reactElement,
+      ~onClick=?,
       _children,
     ) => {
   ...component,
@@ -53,7 +54,21 @@ let make =
       | None => defaultClassName
       | Some(style) => defaultClassName ++ " " ++ style
       };
-    <button _type=(buttonTypeToJs(_type)) className=buttonStyle disabled>
+    let onClickEvent =
+      switch (onClick) {
+      | None => (_event => ())
+      | Some(e) => e
+      };
+    let disabledOption =
+      switch (disabled) {
+      | None => Js.false_
+      | Some(v) => v
+      };
+    <button
+      onClick=onClickEvent
+      _type=(buttonTypeToJs(_type))
+      className=buttonStyle
+      disabled=disabledOption>
       content
     </button>;
   },
