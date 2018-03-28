@@ -17,9 +17,9 @@ let make = _children => {
     Firebase.Authentication.onAuthStateChanged(Firebase.authInstance, user => {
       switch (Js.Nullable.toOption(user)) {
       | None => self.send(SyncApp);
-      | Some(u) => self.send(ConnectUser);
+      | Some(_) => self.send(ConnectUser);
       };
-    });
+    }) |> ignore;
     ReasonReact.NoUpdate;
   },
   reducer: (action, state) =>
@@ -27,7 +27,7 @@ let make = _children => {
     | SyncApp => ReasonReact.Update({ ...state, isSync: true })
     | ConnectUser =>
       ReasonReact.UpdateWithSideEffects(
-        {...state, isConnected: true, isSync: true},
+        {isConnected: true, isSync: true},
         (_self => ReasonReact.Router.push("/")),
       )
     | DisconnectUser => ReasonReact.Update({ isSync: true, isConnected: false})

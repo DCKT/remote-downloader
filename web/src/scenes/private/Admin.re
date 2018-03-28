@@ -30,6 +30,11 @@ let make = (~isLogged: bool, _children) => {
       <Navbar />
       <div className=Styles.pageContent>
         (
+          List.length(self.state.files) == 0 ?
+            ReasonReact.stringToElement("No downloads") :
+            ReasonReact.nullElement
+        )
+        (
           self.state.files
           |> List.map(_file => ReasonReact.stringToElement("Test"))
           |> Array.of_list
