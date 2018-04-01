@@ -15,11 +15,12 @@ module Styles = {
   let root = style([background(hex("F7F8FB")), height(pct(100.))]);
   let pageContent =
     style([maxWidth(px(550)), margin2(~v=px(40), ~h=auto)]);
+  let empty = style([fontSize(px(18)), textAlign(center)]);
 };
 
 let make = (~isLogged: bool, _children) => {
   ...component,
-  initialState: () => {files: [], isModalVisible: true},
+  initialState: () => {files: [], isModalVisible: false},
   reducer: (action, state) =>
     switch (action) {
     | UpdateFilesList(filesList) =>
@@ -39,7 +40,9 @@ let make = (~isLogged: bool, _children) => {
       <div className=Styles.pageContent>
         (
           List.length(self.state.files) == 0 ?
-            ReasonReact.stringToElement("No downloads") :
+            <p className=Styles.empty>
+              (ReasonReact.stringToElement("No downloads"))
+            </p> :
             ReasonReact.nullElement
         )
         (
@@ -51,7 +54,7 @@ let make = (~isLogged: bool, _children) => {
       </div>
       <Modal
         isVisible=self.state.isModalVisible
-        onClose=(_event => self.send(HideModal))
+        onClose=(_ => self.send(HideModal))
       />
     </div>,
 };

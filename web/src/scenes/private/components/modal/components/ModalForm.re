@@ -1,16 +1,22 @@
 module Form = {
   type field =
-    | Link;
+    | Link
+    | Zip;
   type value = string;
-  type state = {link: string};
+  type state = {
+    link: string,
+    zip: string,
+  };
   type message = string;
   let get = (field, state) =>
     switch (field) {
     | Link => state.link
+    | Zip => state.zip
     };
-  let update = ((field, value), _state) =>
+  let update = ((field, value), state) =>
     switch (field, value) {
-    | (Link, value) => {link: value}
+    | (Link, value) => {...state, link: value}
+    | (Zip, value) => {...state, zip: value}
     };
   let valueEmpty = value => value === "";
   let strategy = Formality.Strategy.OnFirstSuccessOrFirstBlur;

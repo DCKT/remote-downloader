@@ -6,6 +6,7 @@ type inputType = [
   | [@bs.as "password"] `Password
   | [@bs.as "email"] `Email
   | [@bs.as "url"] `Url
+  | [@bs.as "checkbox"] `Checkbox
 ];
 
 module Styles = {
@@ -18,25 +19,36 @@ module Styles = {
       border(px(1), solid, hex("ccc")),
       fontSize(px(16)),
     ]);
+  let label = style([
+    display(block),
+    fontSize(px(16)),
+    color(hex("69798F")),
+    marginBottom(px(5))
+  ]);
   let error =
     style([fontSize(px(14)), color(hex("F44336")), marginTop(px(5))]);
 };
 
 let make =
     (
-      ~value: string,
-      ~disabled: Js.boolean,
+      ~label=?,
+      ~value: option(string)=?,
+      ~disabled: option(Js.boolean)=?,
       ~_type: inputType,
       ~placeholder: option(string)=?,
       ~containerClassName: option(string)=?,
       ~inputClassName: option(string)=?,
-      ~onBlur,
+      ~onBlur=?,
       ~onChange,
-      ~error,
+      ~error=?,
       _children,
     ) => {
   ...component,
   render: _self => {
+    let inputValue = switch value {
+    | None => ""
+    | Some(v) => v
+    };
     let customContainerClassName =
       switch (containerClassName) {
       | None => ""
@@ -52,17 +64,38 @@ let make =
       | None => ""
       | Some(p) => p
       };
+    let errorField =
+      switch (error) {
+      | None => ReasonReact.nullElement
+      | Some(err) => <div className=Styles.error> err </div>
+      };
+    let disabledAttr =
+      switch (disabled) {
+      | None => Js.false_
+      | Some(value) => value
+      };
+    let onBlurEvent =
+      switch (onBlur) {
+      | None => (_ => ())
+      | Some(e) => e
+      };
+
+
     <div className=customContainerClassName>
+      (switch label {
+      | None => ReasonReact.nullElement
+      | Some(l) => <label className=Styles.label>l</label>
+      })
       <input
         _type=(inputTypeToJs(_type))
         placeholder=customPlaceholder
         className=customInputClassName
-        value
-        disabled
+        value=inputValue
+        disabled=disabledAttr
         onChange
-        onBlur
+        onBlur=onBlurEvent
       />
-      <div className=Styles.error> error </div>
+      errorField
     </div>;
   },
 };

@@ -82,3 +82,21 @@ let login = (~email, ~password) =>
   Authentication.signInWithEmailAndPassword(authInstance, email, password);
 
 let logout = () => Authentication.signOut(authInstance);
+
+[@bs.val] external dateNow : unit => int = "Date.now";
+
+let addFile = (~url: string, ~extract: bool) => {
+  let id = dateNow();
+  let db = App.database(app);
+  let newRef = Database.ref(db, "files/" ++ string_of_int(id));
+  Database.set(
+    newRef,
+    {
+      "id": id,
+      "progress": 0,
+      "size": 0,
+      "url": url,
+      "extract": extract |> Js.Boolean.to_js_boolean,
+    },
+  );
+};

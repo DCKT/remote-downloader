@@ -36,7 +36,8 @@ After you've downloaded the config files, put them in `src/firebase/data` and na
             "folder": string
             "id": string,
             "progress": int,
-            "status": "waiting" | "pending" | "completed" | "error"
+            "status": "waiting" | "pending" | "completed" | "error",
+            "url": string
         }
     },
     "folders: {

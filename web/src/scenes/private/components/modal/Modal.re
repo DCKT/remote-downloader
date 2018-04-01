@@ -21,7 +21,7 @@ module Styles = {
       padding(px(40)),
       boxShadow(~x=px(1), ~y=px(3), ~blur=px(4), rgba(24, 24, 24, 0.2)),
       width(pct(100.)),
-      maxWidth(px(550)),
+      maxWidth(px(450)),
       minHeight(px(200)),
       margin(auto),
     ]);
@@ -33,7 +33,9 @@ module Styles = {
       borderBottom(px(1), solid, hex("69798F")),
       paddingBottom(px(20)),
     ]);
-  let boxForm = style([marginTop(px(40))]);
+  let boxForm = style([marginTop(px(20))]);
+  let input = style([width(pct(100.))]);
+  let checkboxContainer = style([marginTop(px(15))]);
   let loader =
     style([
       position(absolute),
@@ -48,7 +50,6 @@ module Styles = {
       flexDirection(row),
       alignItems(center),
       justifyContent(center),
-      marginTop(px(20)),
     ]);
 };
 
@@ -57,13 +58,22 @@ let make = (~isVisible: bool, ~onClose, _children) => {
   render: _self =>
     isVisible ?
       <Fragment>
-        <div className=Styles.overlay onClick=onClose />
+        <div className=Styles.overlay onClick=(_event => onClose()) />
         <div className=Styles.box>
           <h2 className=Styles.boxTitle>
             (ReasonReact.stringToElement("New download"))
           </h2>
           <ModalForm.FormContainer
-            initialState={link: ""} onSubmit=((state, notify) => ())>
+            initialState={link: "", zip: ""}
+            onSubmit=(
+              (state, notify) => {
+                Firebase.addFile(~url=state.link, ~extract=state.zip == "on")
+                |> ignore;
+                notify.onSuccess();
+                onClose();
+                ();
+              }
+            )>
             ...(
                  form =>
                    <form
@@ -72,7 +82,9 @@ let make = (~isVisible: bool, ~onClose, _children) => {
                      <Input
                        value=form.state.link
                        _type=`Url
-                       placeholder="Link"
+                       label=(ReasonReact.stringToElement("Download url"))
+                       placeholder="http://"
+                       inputClassName=Styles.input
                        disabled=(form.submitting |> Js.Boolean.to_js_boolean)
                        onChange=(
                          event =>
@@ -95,12 +107,30 @@ let make = (~isVisible: bool, ~onClose, _children) => {
                          }
                        )
                      />
+                     <div className=Styles.checkboxContainer>
+                       <input
+                         id="zip"
+                         _type="checkbox"
+                         checked=(
+                           form.state.zip == "on" |> Js.Boolean.to_js_boolean
+                         )
+                         onChange=(
+                           _event => {
+                             let newValue = form.state.zip == "on" ? "" : "on";
+                             newValue |> form.change(ModalForm.Form.Zip);
+                           }
+                         )
+                       />
+                       <label htmlFor="zip">
+                         (ReasonReact.stringToElement("Unzip after download"))
+                       </label>
+                     </div>
                      <div className=Styles.boxActions>
                        <Button
                          _type=`Button
                          backgroundColor="#fff"
                          color="#333"
-                         onClick=onClose
+                         onClick=(_ => onClose())
                          content=(ReasonReact.stringToElement("Cancel"))
                        />
                        <Button

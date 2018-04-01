@@ -16,7 +16,7 @@ module Styles = {
       fontSize(px(22)),
       textTransform(uppercase),
       fontWeight(700),
-      color(hex("69798F")),
+      color(Colors.grey),
     ]);
   let addButton =
     style([
@@ -24,9 +24,9 @@ module Styles = {
       right(px(20)),
       fontSize(px(20)),
       fontWeight(700),
-      border(px(2), solid, hex("69798F")),
+      border(px(2), solid, Colors.grey),
       borderRadius(px(3)),
-      color(hex("69798F")),
+      color(Colors.grey),
       cursor(`pointer),
     ]);
 };
