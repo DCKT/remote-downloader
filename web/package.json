@@ -16,7 +16,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "prepare": "npm link bs-platform"
+    "prepare": "npm link bs-platform",
+    "deploy": "npm run build && firebase deploy"
   },
   "devDependencies": {
     "bs-jest": "^0.3.2",
