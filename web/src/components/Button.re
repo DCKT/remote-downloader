@@ -18,7 +18,6 @@ module Styles = {
       };
     style([
       display(`flex),
-      margin4(~top=px(25), ~left=auto, ~right=auto, ~bottom=px(0)),
       unsafe("backgroundColor", bgColor),
       fontSize(px(20)),
       unsafe("color", textColor),

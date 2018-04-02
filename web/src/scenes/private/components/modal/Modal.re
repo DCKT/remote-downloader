@@ -51,13 +51,14 @@ module Styles = {
       top(pct(50.)),
       marginTop(px(-10)),
     ]);
-  let submitButton = style([position(relative), minWidth(px(200))]);
+  let submitButton = style([position(relative), minWidth(px(200)), marginLeft(px(15))]);
   let boxActions =
     style([
       display(`flex),
       flexDirection(row),
       alignItems(center),
       justifyContent(center),
+      marginTop(px(20))
     ]);
 };
 
@@ -76,7 +77,7 @@ let make = (~isVisible: bool, ~onClose, _children) => {
             initialState={link: "", zip: ""}
             onSubmit=(
               (state, notify) => {
-                Firebase.addFile(~url=state.link, ~extract=state.zip == "on")
+                Files.add(~url=state.link, ~extract=state.zip == "on")
                 |> ignore;
                 notify.onSuccess();
                 onClose();

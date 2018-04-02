@@ -10,7 +10,7 @@ module DataSnapshot = {
 module Database = {
   type t;
   [@bs.send] external ref : (t, string) => t = "";
-  [@bs.send] external set : (t, Js.t('a)) => t = "";
+  [@bs.send] external set : (t, Js.Nullable.t(Js.t('a))) => t = "";
   [@bs.send] external update : (t, Js.t('a)) => t = "";
   [@bs.send] external child : (t, string) => t = "";
   type cb = DataSnapshot.t => unit;
@@ -42,26 +42,6 @@ module App = {
   [@bs.send] external auth : t => Authentication.t = "";
 };
 
-module Model = {
-  [@bs.deriving jsConverter]
-  type status = [
-    | [@bs.as "waiting"] `waiting
-    | [@bs.as "pending"] `pending
-    | [@bs.as "completed"] `completed
-    | [@bs.as "error"] `error
-  ];
-  type file = {
-    .
-    "extract": bool,
-    "folder": string,
-    "id": string,
-    "progress": int,
-    "status": string,
-    "filename": string,
-    "size": int,
-  };
-};
-
 [@bs.module "firebase"] external initializeApp : 'a => App.t = "";
 
 [@bs.module] external devConfig : string = "./data/dev.json";
@@ -84,22 +64,3 @@ let login = (~email, ~password) =>
   Authentication.signInWithEmailAndPassword(authInstance, email, password);
 
 let logout = () => Authentication.signOut(authInstance);
-
-[@bs.val] external dateNow : unit => int = "Date.now";
-
-let addFile = (~url: string, ~extract: bool) => {
-  let id = dateNow();
-  let db = App.database(app);
-  let newRef = Database.ref(db, "files/" ++ string_of_int(id));
-  Database.set(
-    newRef,
-    {
-      "id": id,
-      "progress": 0,
-      "size": 0,
-      "url": url,
-      "extract": extract |> Js.Boolean.to_js_boolean,
-      "status": "waiting",
-    },
-  );
-};

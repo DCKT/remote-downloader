@@ -1,10 +1,10 @@
 type state = {
-  files: array(Firebase.Model.file),
+  files: array(Files.t),
   isModalVisible: bool,
 };
 
 type action =
-  | UpdateFiles(array(Firebase.Model.file))
+  | UpdateFiles(array(Files.t))
   | ShowModal
   | HideModal;
 
@@ -12,9 +12,9 @@ let component = "Admin" |> ReasonReact.reducerComponent;
 
 module Styles = {
   open Css;
-  let root = style([background(hex("F7F8FB")), height(pct(100.))]);
+  let root = style([background(hex("F7F8FB")), minHeight(pct(100.))]);
   let pageContent =
-    style([maxWidth(px(550)), margin2(~v=px(40), ~h=auto)]);
+    style([maxWidth(px(550)), margin2(~v=px(0), ~h=auto), padding2(~v=px(40), ~h=px(0))]);
   let empty = style([fontSize(px(18)), textAlign(center)]);
 };
 
@@ -55,7 +55,7 @@ let make = (~isLogged: bool, _children) => {
         (
           self.state.files
           |> Array.mapi((index, file) => {
-            <DownloadItem key=(string_of_int(index)) file />
+            <DownloadItem key=(string_of_int(index)) file  />
           })
           |> ReasonReact.arrayToElement
         )

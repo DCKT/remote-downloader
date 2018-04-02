@@ -98,7 +98,7 @@ let handleDownload = data => {
   };
   Download.download(
     ~url=data##url,
-    ~folderPath=data##folder,
+    ~folderPath=downloadFolderPath,
     ~extract=data##extract,
     ~onData,
     ~onResponse,
@@ -106,6 +106,7 @@ let handleDownload = data => {
     ~onError,
   )
   |> Js.Promise.then_(data => {
+       Js.log(data);
        Firebase.Database.update(fileInstance, {"filepath": data##filepath})
        |> ignore;
        Js.Promise.resolve();

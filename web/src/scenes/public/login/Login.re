@@ -7,21 +7,27 @@ module Styles = {
       display(`flex),
       justifyContent(center),
       alignItems(center),
-      background(hex("0288D1")),
+      background(Colors.pageBackground),
       height(pct(100.)),
     ]);
   let box =
     style([
       background(hex("fff")),
-      width(px(500)),
+      width(px(400)),
       padding(px(40)),
-      boxShadow(~x=px(0), ~y=px(3), ~blur=px(9), rgba(24, 24, 24, 0.3)),
+      boxShadow(~x=px(0), ~y=px(0), ~blur=px(12), rgba(24, 24, 24, 0.12)),
     ]);
   let form = style([marginTop(px(40))]);
   let title =
-    style([fontSize(px(28)), fontWeight(700), textAlign(center)]);
-  let input =
+    style([
+      fontSize(px(28)),
+      fontWeight(700),
+      textAlign(center),
+      color(Colors.grey),
+    ]);
+  let inputContainer =
     style([display(block), marginBottom(px(15)), textAlign(center)]);
+  let inputStyle = style([minWidth(px(220))]);
   let loader =
     style([
       position(absolute),
@@ -29,7 +35,12 @@ module Styles = {
       top(pct(50.)),
       marginTop(px(-10)),
     ]);
-  let submitButton = style([position(relative), minWidth(px(200))]);
+  let submitButton =
+    style([
+      position(relative),
+      minWidth(px(220)),
+      margin4(~top=px(20), ~right=auto, ~left=auto, ~bottom=px(0)),
+    ]);
 };
 
 let make = (~isLogged: bool, ~connectUser, _children) => {
@@ -75,7 +86,8 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
                      _type=`Email
                      placeholder="Email"
                      disabled=(form.submitting |> Js.Boolean.to_js_boolean)
-                     containerClassName=Styles.input
+                     containerClassName=Styles.inputContainer
+                     inputClassName=Styles.inputStyle
                      onChange=(
                        event =>
                          event
@@ -101,7 +113,8 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
                      value=form.state.password
                      _type=`Password
                      placeholder="**********"
-                     containerClassName=Styles.input
+                     containerClassName=Styles.inputContainer
+                     inputClassName=Styles.inputStyle
                      disabled=(form.submitting |> Js.Boolean.to_js_boolean)
                      onChange=(
                        event =>

@@ -1,5 +1,7 @@
 open Css;
 
+let pageBackground = hex("F7F8FB");
+
 let white = hex("fff");
 
 let progressBarBackground = rgba(24, 24, 24, 0.20);

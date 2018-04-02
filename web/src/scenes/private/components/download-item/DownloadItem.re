@@ -7,9 +7,9 @@ module Styles = {
       background(Colors.white),
       borderRadius(px(2)),
       boxShadow(~x=px(0), ~y=px(0), ~blur=px(12), rgba(24, 24, 24, 0.12)),
-      marginBottom(px(30)),
       padding(px(30)),
       position(relative),
+      selector(":not(:last-child)", [marginBottom(px(30))]),
     ]);
   let title =
     style([
@@ -20,8 +20,7 @@ module Styles = {
       marginBottom(px(15)),
     ]);
   let progressBarContainer = style([display(`flex), alignItems(center)]);
-  let progressBar =
-      (~progress: float, ~status: option(Firebase.Model.status)) => {
+  let progressBar = (~progress: float, ~status: option(Files.status)) => {
     let barColor =
       switch (status) {
       | None => Colors.grey
@@ -69,13 +68,15 @@ module Styles = {
   let deleteIcon = style([color(Colors.grey)]);
 };
 
-let make = (~file: Firebase.Model.file, _children) => {
+let make = (~file: Files.t, _children) => {
   ...component,
   render: _self => {
     let progress =
       float_of_int(file##progress) /. float_of_int(file##size) *. 100.;
     <div className=Styles.root>
-      <button className=Styles.deleteButton>
+      <button
+        className=Styles.deleteButton
+        onClick=(_event => Files.remove(~id=file##id))>
         <i className=("material-icons " ++ Styles.deleteIcon)>
           (ReasonReact.stringToElement("delete_forever"))
         </i>
@@ -88,7 +89,7 @@ let make = (~file: Firebase.Model.file, _children) => {
           className=(
             Styles.progressBar(
               ~progress,
-              ~status=Firebase.Model.statusFromJs(file##status),
+              ~status=Files.statusFromJs(file##status),
             )
           )
         />
