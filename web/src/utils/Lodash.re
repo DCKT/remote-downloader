@@ -1,0 +1,1 @@
+[@bs.module] external map : 'a => array(Firebase.Model.file) = "lodash.map";

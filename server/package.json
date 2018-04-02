@@ -18,7 +18,7 @@
   "dependencies": {
     "diskusage": "^0.2.4",
     "dotenv": "^5.0.1",
-    "download": "github:DCKT/download#feat/filename",
+    "download": "github:DCKT/download#filename",
     "firebase-admin": "^5.10.0",
     "got": "^8.3.0",
     "lodash.throttle": "^4.1.1",

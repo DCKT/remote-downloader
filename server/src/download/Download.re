@@ -34,15 +34,17 @@ type downloadPromiseResponse = {
   .
   "data": string,
   "filename": string,
-  "filePath": string,
+  "filepath": string,
 };
 
 type t('a) = Js.Promise.t(downloadPromiseResponse);
 
-[@bs.module]
+[@bs.module "download"]
 external customDownload :
   (~url: string, ~folderPath: string, ~options: moduleOptions) => t('a) =
   "download";
+
+[@bs.module "download"] external getFilename : 'a => string = "getFilename";
 
 [@bs.send.pipe: t('a)]
 external on :

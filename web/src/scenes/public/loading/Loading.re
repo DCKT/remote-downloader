@@ -4,7 +4,7 @@ module Styles = {
   open Css;
   let root =
     style([
-      background(hex("0288D1")),
+      background(Colors.blue),
       height(pct(100.)),
       display(`flex),
       justifyContent(center),

@@ -64,6 +64,7 @@ let handleDownload = data => {
   let onResponse = res => {
     let unsafeContentLength =
       Download.getContentLength(res##headers, "content-length");
+    let filename = Download.getFilename(res);
     let contentLength =
       switch (Js.Nullable.toOption(unsafeContentLength)) {
       | None => 0
@@ -71,7 +72,11 @@ let handleDownload = data => {
       };
     Firebase.Database.update(
       fileInstance,
-      {"size": contentLength, "status": Download.statusToJs(`pending)},
+      {
+        "size": contentLength,
+        "status": Download.statusToJs(`pending),
+        "filename": filename,
+      },
     )
     |> ignore;
     ();
@@ -101,10 +106,7 @@ let handleDownload = data => {
     ~onError,
   )
   |> Js.Promise.then_(data => {
-       Firebase.Database.update(
-         fileInstance,
-         {"filename": data##filename, "filepath": data##filePath},
-       )
+       Firebase.Database.update(fileInstance, {"filepath": data##filepath})
        |> ignore;
        Js.Promise.resolve();
      })

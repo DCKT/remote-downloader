@@ -56,7 +56,9 @@ module Model = {
     "folder": string,
     "id": string,
     "progress": int,
-    "status": status,
+    "status": string,
+    "filename": string,
+    "size": int,
   };
 };
 
@@ -97,6 +99,7 @@ let addFile = (~url: string, ~extract: bool) => {
       "size": 0,
       "url": url,
       "extract": extract |> Js.Boolean.to_js_boolean,
+      "status": "waiting",
     },
   );
 };

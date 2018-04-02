@@ -9,11 +9,19 @@ module Styles = {
       left(px(0)),
       width(pct(100.)),
       height(pct(100.)),
-      background(rgba(24, 24, 24, 0.6)),
+      background(rgba(24, 24, 24, 0.85)),
       display(`flex),
       justifyContent(center),
       alignItems(center),
     ]);
+
+  let boxRoot = style([
+    position(fixed),
+    top(pct(50.)),
+    left(pct(50.)),
+    display(`flex),
+    transform(translate(pct(-50.), pct(-50.)))
+  ]);
   let box =
     style([
       position(relative),
@@ -59,6 +67,7 @@ let make = (~isVisible: bool, ~onClose, _children) => {
     isVisible ?
       <Fragment>
         <div className=Styles.overlay onClick=(_event => onClose()) />
+        <div className=Styles.boxRoot>
         <div className=Styles.box>
           <h2 className=Styles.boxTitle>
             (ReasonReact.stringToElement("New download"))
@@ -160,6 +169,7 @@ let make = (~isVisible: bool, ~onClose, _children) => {
                    </form>
                )
           </ModalForm.FormContainer>
+        </div>
         </div>
       </Fragment> :
       ReasonReact.nullElement,

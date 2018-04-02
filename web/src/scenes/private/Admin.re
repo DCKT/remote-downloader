@@ -1,10 +1,10 @@
 type state = {
-  files: list(Firebase.Model.file),
+  files: array(Firebase.Model.file),
   isModalVisible: bool,
 };
 
 type action =
-  | UpdateFilesList(list(Firebase.Model.file))
+  | UpdateFiles(array(Firebase.Model.file))
   | ShowModal
   | HideModal;
 
@@ -20,26 +20,33 @@ module Styles = {
 
 let make = (~isLogged: bool, _children) => {
   ...component,
-  initialState: () => {files: [], isModalVisible: false},
+  initialState: () => {files: [||], isModalVisible: false},
   reducer: (action, state) =>
     switch (action) {
-    | UpdateFilesList(filesList) =>
-      ReasonReact.Update({...state, files: filesList})
+    | UpdateFiles(files) => ReasonReact.Update({...state, files})
     | ShowModal => ReasonReact.Update({...state, isModalVisible: true})
     | HideModal => ReasonReact.Update({...state, isModalVisible: false})
     },
-  didMount: _self => {
+  didMount: self => {
     if (! isLogged) {
       ReasonReact.Router.push(Router.Config.routeToUrl(Login));
     };
+    let db = Firebase.App.database(Firebase.app);
+
+    Firebase.Database.on(Firebase.Database.ref(db, "files"), ~eventType="value", ~callback=snapshot => {
+      let data = Firebase.DataSnapshot.val_(snapshot);
+      let value = Lodash.map(data);
+      self.send(UpdateFiles(value));
+      ();
+    }) |> ignore;
     ReasonReact.NoUpdate;
   },
-  render: self =>
+  render: self => 
     <div className=Styles.root>
       <Navbar showModal=(_event => self.send(ShowModal)) />
       <div className=Styles.pageContent>
         (
-          List.length(self.state.files) == 0 ?
+          Array.length(self.state.files) == 0 ?
             <p className=Styles.empty>
               (ReasonReact.stringToElement("No downloads"))
             </p> :
@@ -47,8 +54,9 @@ let make = (~isLogged: bool, _children) => {
         )
         (
           self.state.files
-          |> List.map(_file => ReasonReact.stringToElement("Test"))
-          |> Array.of_list
+          |> Array.mapi((index, file) => {
+            <DownloadItem key=(string_of_int(index)) file />
+          })
           |> ReasonReact.arrayToElement
         )
       </div>
