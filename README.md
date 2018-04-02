@@ -2,6 +2,9 @@
 
 Download files from anywhere 😎
 
+## Setup
+There is a `README` for each project, take a look !
+
 ## How it works
 
 This project uses Firebase to avoid database, hosting and some painful server management.
