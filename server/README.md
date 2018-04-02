@@ -1,15 +1,4 @@
-# REMOTE DOWNLOADER
-
-Download files from anywhere 😎
-
-## How it works
-
-This project is split into 2 projects :
-
-* **server** : listen Firebase Database update and trigger action
-* **client** : web interface to add and remove database elements
-
-That allow us to customize the UI and have basic server management, just `npm i` then `npm start` and it run.
+# Server
 
 ## Setup
 
@@ -57,7 +46,7 @@ DOWNLOAD_FOLDER_PATH=../any/where/you/have/right
 
 ### Install dependencies
 
-The project was written with Node.js v8, it hasn't been tested on other versions.
+The project was written with Node.js LTS, it hasn't been tested on other versions.
 To install dependencies run this command :
 
 ```
