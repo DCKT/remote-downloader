@@ -19,12 +19,13 @@ module Styles = {
       border(px(1), solid, hex("ccc")),
       fontSize(px(16)),
     ]);
-  let label = style([
-    display(block),
-    fontSize(px(16)),
-    color(hex("69798F")),
-    marginBottom(px(5))
-  ]);
+  let label =
+    style([
+      display(block),
+      fontSize(px(16)),
+      color(hex("69798F")),
+      marginBottom(px(5)),
+    ]);
   let error =
     style([fontSize(px(14)), color(hex("F44336")), marginTop(px(5))]);
 };
@@ -33,7 +34,7 @@ let make =
     (
       ~label=?,
       ~value: option(string)=?,
-      ~disabled: option(Js.boolean)=?,
+      ~disabled: option(bool)=?,
       ~_type: inputType,
       ~placeholder: option(string)=?,
       ~containerClassName: option(string)=?,
@@ -45,10 +46,11 @@ let make =
     ) => {
   ...component,
   render: _self => {
-    let inputValue = switch value {
-    | None => ""
-    | Some(v) => v
-    };
+    let inputValue =
+      switch (value) {
+      | None => ""
+      | Some(v) => v
+      };
     let customContainerClassName =
       switch (containerClassName) {
       | None => ""
@@ -80,14 +82,15 @@ let make =
       | Some(e) => e
       };
 
-
     <div className=customContainerClassName>
-      (switch label {
-      | None => ReasonReact.nullElement
-      | Some(l) => <label className=Styles.label>l</label>
-      })
+      {
+        switch (label) {
+        | None => ReasonReact.nullElement
+        | Some(l) => <label className=Styles.label> l </label>
+        }
+      }
       <input
-        _type=(inputTypeToJs(_type))
+        _type={inputTypeToJs(_type)}
         placeholder=customPlaceholder
         className=customInputClassName
         value=inputValue

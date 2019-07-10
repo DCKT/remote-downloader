@@ -40,7 +40,7 @@ let make =
       ~className: option(string)=?,
       ~backgroundColor: option(string)=?,
       ~color: option(string)=?,
-      ~disabled: option(Js.boolean)=?,
+      ~disabled: option(bool)=?,
       ~content: ReasonReact.reactElement,
       ~onClick=?,
       _children,
@@ -65,7 +65,7 @@ let make =
       };
     <button
       onClick=onClickEvent
-      _type=(buttonTypeToJs(_type))
+      _type={buttonTypeToJs(_type)}
       className=buttonStyle
       disabled=disabledOption>
       content

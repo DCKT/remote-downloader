@@ -17,7 +17,7 @@ type t = {
   "size": int,
 };
 
-[@bs.val] external dateNow : unit => int = "Date.now";
+[@bs.val] external dateNow: unit => int = "Date.now";
 
 let add = (~url: string, ~extract: bool) => {
   let id = dateNow();
@@ -30,7 +30,7 @@ let add = (~url: string, ~extract: bool) => {
       "progress": 0,
       "size": 0,
       "url": url,
-      "extract": extract |> Js.Boolean.to_js_boolean,
+      "extract": extract |> bool.to_js_boolean,
       "status": "waiting",
     }),
   )

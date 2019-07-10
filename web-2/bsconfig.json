@@ -1,0 +1,17 @@
+{
+  "name": "remote-downloader-web",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    }
+  ],
+  "bs-dependencies": ["reason-react", "bs-css"],
+  "reason": {
+    "react-jsx": 3
+  },
+  "warnings": {
+    "error": "+101"
+  },
+  "refmt": 3
+}

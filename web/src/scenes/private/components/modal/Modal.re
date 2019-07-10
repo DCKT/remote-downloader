@@ -15,13 +15,14 @@ module Styles = {
       alignItems(center),
     ]);
 
-  let boxRoot = style([
-    position(fixed),
-    top(pct(50.)),
-    left(pct(50.)),
-    display(`flex),
-    transform(translate(pct(-50.), pct(-50.)))
-  ]);
+  let boxRoot =
+    style([
+      position(fixed),
+      top(pct(50.)),
+      left(pct(50.)),
+      display(`flex),
+      transform(translate(pct(-50.), pct(-50.))),
+    ]);
   let box =
     style([
       position(relative),
@@ -51,14 +52,15 @@ module Styles = {
       top(pct(50.)),
       marginTop(px(-10)),
     ]);
-  let submitButton = style([position(relative), minWidth(px(200)), marginLeft(px(15))]);
+  let submitButton =
+    style([position(relative), minWidth(px(200)), marginLeft(px(15))]);
   let boxActions =
     style([
       display(`flex),
       flexDirection(row),
       alignItems(center),
       justifyContent(center),
-      marginTop(px(20))
+      marginTop(px(20)),
     ]);
 };
 
@@ -67,110 +69,115 @@ let make = (~isVisible: bool, ~onClose, _children) => {
   render: _self =>
     isVisible ?
       <Fragment>
-        <div className=Styles.overlay onClick=(_event => onClose()) />
+        <div className=Styles.overlay onClick={_event => onClose()} />
         <div className=Styles.boxRoot>
-        <div className=Styles.box>
-          <h2 className=Styles.boxTitle>
-            (ReasonReact.stringToElement("New download"))
-          </h2>
-          <ModalForm.FormContainer
-            initialState={link: "", zip: ""}
-            onSubmit=(
-              (state, notify) => {
-                Files.add(~url=state.link, ~extract=state.zip == "on")
-                |> ignore;
-                notify.onSuccess();
-                onClose();
-                ();
-              }
-            )>
-            ...(
-                 form =>
-                   <form
-                     className=Styles.boxForm
-                     onSubmit=(form.submit |> Formality.Dom.preventDefault)>
-                     <Input
-                       value=form.state.link
-                       _type=`Url
-                       label=(ReasonReact.stringToElement("Download url"))
-                       placeholder="http://"
-                       inputClassName=Styles.input
-                       disabled=(form.submitting |> Js.Boolean.to_js_boolean)
-                       onChange=(
-                         event =>
-                           event
-                           |> Formality.Dom.toValueOnChange
-                           |> form.change(ModalForm.Form.Link)
-                       )
-                       onBlur=(
-                         event =>
-                           event
-                           |> Formality.Dom.toValueOnBlur
-                           |> form.change(ModalForm.Form.Link)
-                       )
-                       error=(
-                         switch (ModalForm.Form.Link |> form.results) {
-                         | Some(Invalid(message)) =>
-                           message |> ReasonReact.stringToElement
-                         | Some(Valid)
-                         | None => ReasonReact.nullElement
+          <div className=Styles.box>
+            <h2 className=Styles.boxTitle>
+              {ReasonReact.stringToElement("New download")}
+            </h2>
+            <ModalForm.FormContainer
+              initialState={link: "", zip: ""}
+              onSubmit={
+                (state, notify) => {
+                  Files.add(~url=state.link, ~extract=state.zip == "on")
+                  |> ignore;
+                  notify.onSuccess();
+                  onClose();
+                  ();
+                }
+              }>
+              ...{
+                   form =>
+                     <form
+                       className=Styles.boxForm
+                       onSubmit={form.submit |> Formality.Dom.preventDefault}>
+                       <Input
+                         value={form.state.link}
+                         _type=`Url
+                         label={ReasonReact.stringToElement("Download url")}
+                         placeholder="http://"
+                         inputClassName=Styles.input
+                         disabled={form.submitting |> Js.Boolean.to_js_boolean}
+                         onChange={
+                           event =>
+                             event
+                             |> Formality.Dom.toValueOnChange
+                             |> form.change(ModalForm.Form.Link)
                          }
-                       )
-                     />
-                     <div className=Styles.checkboxContainer>
-                       <input
-                         id="zip"
-                         _type="checkbox"
-                         checked=(
-                           form.state.zip == "on" |> Js.Boolean.to_js_boolean
-                         )
-                         onChange=(
-                           _event => {
-                             let newValue = form.state.zip == "on" ? "" : "on";
-                             newValue |> form.change(ModalForm.Form.Zip);
+                         onBlur={
+                           event =>
+                             event
+                             |> Formality.Dom.toValueOnBlur
+                             |> form.change(ModalForm.Form.Link)
+                         }
+                         error={
+                           switch (ModalForm.Form.Link |> form.results) {
+                           | Some(Invalid(message)) =>
+                             message |> ReasonReact.stringToElement
+                           | Some(Valid)
+                           | None => ReasonReact.nullElement
                            }
-                         )
-                       />
-                       <label htmlFor="zip">
-                         (ReasonReact.stringToElement("Unzip after download"))
-                       </label>
-                     </div>
-                     <div className=Styles.boxActions>
-                       <Button
-                         _type=`Button
-                         backgroundColor="#fff"
-                         color="#333"
-                         onClick=(_ => onClose())
-                         content=(ReasonReact.stringToElement("Cancel"))
-                       />
-                       <Button
-                         _type=`Submit
-                         disabled=(form.submitting |> Js.Boolean.to_js_boolean)
-                         className=Styles.submitButton
-                         content={
-                           <Fragment>
-                             (
-                               form.submitting ?
-                                 <Loader
-                                   size=Loader.Tiny
-                                   isActive=true
-                                   color="#fff"
-                                   className=Styles.loader
-                                 /> :
-                                 ReasonReact.nullElement
-                             )
-                             (
-                               (form.submitting ? "Submitting..." : "Add")
-                               |> ReasonReact.stringToElement
-                             )
-                           </Fragment>
                          }
                        />
-                     </div>
-                   </form>
-               )
-          </ModalForm.FormContainer>
-        </div>
+                       <div className=Styles.checkboxContainer>
+                         <input
+                           id="zip"
+                           _type="checkbox"
+                           checked={
+                             form.state.zip == "on" |> Js.Boolean.to_js_boolean
+                           }
+                           onChange={
+                             _event => {
+                               let newValue =
+                                 form.state.zip == "on" ? "" : "on";
+                               newValue |> form.change(ModalForm.Form.Zip);
+                             }
+                           }
+                         />
+                         <label htmlFor="zip">
+                           {
+                             ReasonReact.stringToElement(
+                               "Unzip after download",
+                             )
+                           }
+                         </label>
+                       </div>
+                       <div className=Styles.boxActions>
+                         <Button
+                           _type=`Button
+                           backgroundColor="#fff"
+                           color="#333"
+                           onClick={_ => onClose()}
+                           content={ReasonReact.stringToElement("Cancel")}
+                         />
+                         <Button
+                           _type=`Submit
+                           disabled={form.submitting |> bool.to_js_boolean}
+                           className=Styles.submitButton
+                           content={
+                             <Fragment>
+                               {
+                                 form.submitting ?
+                                   <Loader
+                                     size=Loader.Tiny
+                                     isActive=true
+                                     color="#fff"
+                                     className=Styles.loader
+                                   /> :
+                                   ReasonReact.nullElement
+                               }
+                               {
+                                 (form.submitting ? "Submitting..." : "Add")
+                                 |> ReasonReact.stringToElement
+                               }
+                             </Fragment>
+                           }
+                         />
+                       </div>
+                     </form>
+                 }
+            </ModalForm.FormContainer>
+          </div>
         </div>
       </Fragment> :
       ReasonReact.nullElement,

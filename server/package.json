@@ -13,15 +13,15 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "bs-platform": "^2.2.2"
+    "@dck/bs-node": "0.2.1",
+    "bs-platform": "5.0.6"
   },
   "dependencies": {
     "diskusage": "^0.2.4",
-    "dotenv": "^5.0.1",
+    "dotenv": "8.0.0",
     "download": "github:DCKT/download#filename",
     "firebase-admin": "^5.10.0",
-    "got": "^8.3.0",
-    "lodash.throttle": "^4.1.1",
+    "lodash.throttle": "4.1.1",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2"
   }

@@ -4,33 +4,33 @@ module Error = {
 
 module DataSnapshot = {
   type t;
-  [@bs.send] external val_ : t => Js.t('a) = "val";
+  [@bs.send] external val_: t => Js.t('a) = "val";
 };
 
 module Database = {
   type t;
-  [@bs.send] external ref : (t, string) => t = "";
-  [@bs.send] external set : (t, Js.t('a)) => t = "";
-  [@bs.send] external update : (t, Js.t('a)) => t = "";
-  [@bs.send] external child : (t, string) => t = "";
+  [@bs.send] external ref: (t, string) => t = "";
+  [@bs.send] external set: (t, 'a) => t = "";
+  [@bs.send] external update: (t, Js.t('a)) => t = "";
+  [@bs.send] external child: (t, string) => t = "";
   type cb = DataSnapshot.t => unit;
-  [@bs.send] external on : (t, ~eventType: string, ~callback: cb) => cb = "";
+  [@bs.send] external on: (t, ~eventType: string, ~callback: cb) => cb = "";
 };
 
 module App = {
   type t;
-  [@bs.send] external database : t => Database.t = "";
+  [@bs.send] external database: t => Database.t = "";
 };
 
-[@bs.module "firebase-admin"] external initializeApp : 'a => App.t = "";
+[@bs.module "firebase-admin"] external initializeApp: 'a => App.t = "";
 
 type credentialInterface = {. [@bs.meth] "cert": string => string};
 
-[@bs.module "firebase-admin"] external credential : credentialInterface = "";
+[@bs.module "firebase-admin"] external credential: credentialInterface = "";
 
-[@bs.module] external devConfig : string = "./data/dev.json";
+[@bs.module] external devConfig: string = "./data/dev.json";
 
-[@bs.module] external prodConfig : string = "./data/prod.json";
+[@bs.module] external prodConfig: string = "./data/prod.json";
 
 let nodeEnv: option(string) = Some([%raw "process.env.NODE_ENV"]);
 

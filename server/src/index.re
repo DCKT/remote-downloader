@@ -1,14 +1,26 @@
+open BsNode;
+open BsLodash;
+open BsRimRaf;
+open BsMkdirp;
+open BsDiskUsage;
+
 let unsafeFolderPath: Js.Nullable.t(string) = [%raw
   "process.env.DOWNLOAD_FOLDER_PATH"
 ];
 
 let downloadFolderPath =
-  switch (Js.Nullable.toOption(unsafeFolderPath)) {
-  | None => "./download"
-  | Some(path) => path
-  };
+  unsafeFolderPath
+  ->Js.Nullable.toOption
+  ->Belt.Option.getWithDefault("./download");
 
-Filesystem.createDownloadFolder(~path=downloadFolderPath);
+mkdirp(downloadFolderPath, err =>
+  switch (err->Js.Nullable.toOption) {
+  | None => ()
+  | Some(error) =>
+    Js.log(error);
+    Js.Exn.raiseError("Can't create folder");
+  }
+);
 
 let db = Firebase.app |> Firebase.App.database;
 
@@ -18,34 +30,32 @@ let foldersDB = Firebase.Database.ref(db, "folders");
 
 let diskDB = Firebase.Database.ref(db, "disk");
 
-Filesystem.getFolders(~path=downloadFolderPath)
-|> Js.Promise.then_(folders => {
-     Firebase.Database.set(
-       foldersDB,
-       {"list": Js.Array.joinWith(",", folders)},
-     )
-     |> ignore;
-     Js.Promise.resolve();
-   })
-|> Js.Promise.catch(err => {
-     Js.log("Filesystem: something went wrong");
-     Js.log(err);
-     Js.Promise.resolve();
-   });
+Fs.readdir(downloadFolderPath, (err, folders) =>
+  switch (err->Js.Nullable.toOption) {
+  | Some(e) =>
+    Js.log("Filesystem: something went wrong");
+    Js.log(e);
 
-Diskusage.getDiskSpace(~path="/")
-|> Js.Promise.then_(infos => {
-     Firebase.Database.set(diskDB, infos) |> ignore;
-     Js.Promise.resolve();
-   })
-|> Js.Promise.catch(err => {
-     Js.log("Diskusage : something went wrong");
-     Js.log(err);
-     Js.Promise.resolve();
-   });
+  | None =>
+    Firebase.Database.set(
+      foldersDB,
+      {"list": Js.Array.joinWith(",", folders)},
+    )
+    |> ignore
+  }
+);
+
+checkDiskUsage("/", (err, infos) =>
+  switch (err->Js.Nullable.toOption) {
+  | None => Firebase.Database.set(diskDB, infos) |> ignore
+  | Some(e) =>
+    Js.log("Diskusage : something went wrong");
+    Js.log(e);
+  }
+);
 
 let updateProgress =
-  Lodash.throttle(
+  throttle(
     item => {
       let file = Firebase.Database.child(filesDB, item##id);
       Firebase.Database.update(file, {"progress": item##progress}) |> ignore;
@@ -62,14 +72,13 @@ let handleDownload = data => {
     ();
   };
   let onResponse = res => {
-    let unsafeContentLength =
-      Download.getContentLength(res##headers, "content-length");
-    let filename = Download.getFilename(res);
     let contentLength =
-      switch (Js.Nullable.toOption(unsafeContentLength)) {
-      | None => 0
-      | Some(value) => value
-      };
+      Download.getContentLength(res##headers, "content-length")
+      ->Js.Nullable.toOption
+      ->Belt.Option.getWithDefault(0);
+
+    let filename = Download.getFilename(res);
+
     Firebase.Database.update(
       fileInstance,
       {
@@ -140,6 +149,6 @@ Firebase.Database.on(
   ~eventType="child_removed",
   ~callback=snapshot => {
     let data = Firebase.DataSnapshot.val_(snapshot);
-    Rimraf.removeFolder(data##filepath, () => ());
+    removeFolder(data##filepath, () => ());
   },
 );

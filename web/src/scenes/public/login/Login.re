@@ -55,11 +55,11 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
     <div className=Styles.root>
       <div className=Styles.box>
         <h1 className=Styles.title>
-          (ReasonReact.stringToElement("Welcome"))
+          {ReasonReact.stringToElement("Welcome")}
         </h1>
         <LoginForm.FormContainer
           initialState={email: "", password: ""}
-          onSubmit=(
+          onSubmit={
             (state, notify) => {
               Firebase.login(~email=state.email, ~password=state.password)
               |> Js.Promise.then_(() => {
@@ -75,75 +75,75 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
               |> ignore;
               ();
             }
-          )>
-          ...(
+          }>
+          ...{
                form =>
                  <form
                    className=Styles.form
-                   onSubmit=(form.submit |> Formality.Dom.preventDefault)>
+                   onSubmit={form.submit |> Formality.Dom.preventDefault}>
                    <Input
-                     value=form.state.email
+                     value={form.state.email}
                      _type=`Email
                      placeholder="Email"
-                     disabled=(form.submitting |> Js.Boolean.to_js_boolean)
+                     disabled={form.submitting |> Js.Boolean.to_js_boolean}
                      containerClassName=Styles.inputContainer
                      inputClassName=Styles.inputStyle
-                     onChange=(
+                     onChange={
                        event =>
                          event
                          |> Formality.Dom.toValueOnChange
                          |> form.change(LoginForm.Form.Email)
-                     )
-                     onBlur=(
+                     }
+                     onBlur={
                        event =>
                          event
                          |> Formality.Dom.toValueOnBlur
                          |> form.blur(LoginForm.Form.Email)
-                     )
-                     error=(
+                     }
+                     error={
                        switch (LoginForm.Form.Email |> form.results) {
                        | Some(Invalid(message)) =>
                          message |> ReasonReact.stringToElement
                        | Some(Valid)
                        | None => ReasonReact.nullElement
                        }
-                     )
+                     }
                    />
                    <Input
-                     value=form.state.password
+                     value={form.state.password}
                      _type=`Password
                      placeholder="**********"
                      containerClassName=Styles.inputContainer
                      inputClassName=Styles.inputStyle
-                     disabled=(form.submitting |> Js.Boolean.to_js_boolean)
-                     onChange=(
+                     disabled={form.submitting |> Js.Boolean.to_js_boolean}
+                     onChange={
                        event =>
                          event
                          |> Formality.Dom.toValueOnChange
                          |> form.change(LoginForm.Form.Password)
-                     )
-                     onBlur=(
+                     }
+                     onBlur={
                        event =>
                          event
                          |> Formality.Dom.toValueOnBlur
                          |> form.blur(LoginForm.Form.Password)
-                     )
-                     error=(
+                     }
+                     error={
                        switch (LoginForm.Form.Password |> form.results) {
                        | Some(Invalid(message)) =>
-                         <div> (message |> ReasonReact.stringToElement) </div>
+                         <div> {message |> ReasonReact.stringToElement} </div>
                        | Some(Valid)
                        | None => ReasonReact.nullElement
                        }
-                     )
+                     }
                    />
                    <Button
                      _type=`Submit
-                     disabled=(form.submitting |> Js.Boolean.to_js_boolean)
+                     disabled={form.submitting |> bool.to_js_boolean}
                      className=Styles.submitButton
                      content={
                        <Fragment>
-                         (
+                         {
                            form.submitting ?
                              <Loader
                                size=Loader.Tiny
@@ -152,16 +152,16 @@ let make = (~isLogged: bool, ~connectUser, _children) => {
                                className=Styles.loader
                              /> :
                              ReasonReact.nullElement
-                         )
-                         (
+                         }
+                         {
                            (form.submitting ? "Submitting..." : "Login")
                            |> ReasonReact.stringToElement
-                         )
+                         }
                        </Fragment>
                      }
                    />
                  </form>
-             )
+             }
         </LoginForm.FormContainer>
       </div>
     </div>,
