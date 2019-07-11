@@ -68,7 +68,10 @@ let make = () => {
       ...{
            (~currentRoute) =>
              switch (currentRoute) {
-             | RouterConfig.Login => <AnonymousScreen />
+             | RouterConfig.Login =>
+               <LoginScreen
+                 onLoginSuccess=(() => setAuthenticated(_ => true))
+               />
              | RouterConfig.Admin =>
                <PrivateOnly authenticated> <AdminScreen /> </PrivateOnly>
              | _ => <NotFound />

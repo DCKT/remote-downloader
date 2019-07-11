@@ -6,7 +6,12 @@
       "subdirs": true
     }
   ],
-  "bs-dependencies": ["reason-react", "bs-css", "@dck/reason-react-navigation"],
+  "bs-dependencies": [
+    "reason-react",
+    "bs-css",
+    "@dck/reason-react-navigation",
+    "re-formality"
+  ],
   "reason": {
     "react-jsx": 3
   },

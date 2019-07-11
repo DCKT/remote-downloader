@@ -8429,6 +8429,18 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+re-debouncer@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/re-debouncer/-/re-debouncer-2.0.0.tgz#598bd7bc45fa38216c4d2652143c46cdc3334aa1"
+  integrity sha512-DGgIldcw6Fy7IJOqQnWcTUndlkldr0Q3UKFEKcPZh3sK7SDk1o8bY5Pf1omkpeX5TjfMz1oXReQF90ZddGcnFw==
+
+re-formality@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/re-formality/-/re-formality-3.0.0.tgz#4e92807b6b55a750381f5af8a94cf629d67a1d0c"
+  integrity sha512-vXsHiAyXqHZBdAFKPd053Ct7z7OEaNLlXdy83NI5EyNk5aSshzIQoD95HSYTD+W8SB87l3cmPvqL0oq1ATxIng==
+  dependencies:
+    re-debouncer "2.0.0"
+
 react-app-polyfill@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-app-polyfill/-/react-app-polyfill-1.0.1.tgz#809a858e44f9564c7f4205e173076f90048274f1"
