@@ -932,6 +932,11 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-9.0.1.tgz#c27b391d8457d1e893f1eddeaf5e5412d12ffbb5"
   integrity sha512-6It2EVfGskxZCQhuykrfnALg7oVeiI6KclWSmGDqB0AiInVrTGB9Jp9i4/Ad21u9Jde/voVQz6eFX/eSg/UsPA==
 
+"@dck/reason-react-navigation@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@dck/reason-react-navigation/-/reason-react-navigation-1.0.1.tgz#da97e3151005af6901c9d80b4d05d32142e2866b"
+  integrity sha512-QNktaGBO0l0Qddt9xNfOIb1qCmSSFwJRcDlxFvFxkBop9QvEwWtgUtyG66T/OikDvoUAobdXwd3Tt5kpgenbmA==
+
 "@emotion/cache@^10.0.14":
   version "10.0.14"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.14.tgz#56093cff025c04b0330bdd92afe8335ed326dd18"
@@ -2556,7 +2561,7 @@ bs-css@^9.0.1:
   dependencies:
     emotion "^10.0.7"
 
-bs-platform@5.0.6:
+bs-platform@^5.0.6:
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/bs-platform/-/bs-platform-5.0.6.tgz#88c13041fb020479800de3d82c680bf971091425"
   integrity sha512-6Boa2VEcWJp2WJr38L7bp3J929nYha7gDarjxb070jWzgfPJ/WbzjipmSfnu2eqqk1MfjEIpBipbPz6n1NISwA==
@@ -8467,7 +8472,7 @@ react-dev-utils@^9.0.1:
     strip-ansi "5.2.0"
     text-table "0.2.0"
 
-react-dom@^16.8.6:
+react-dom@16.8.6, react-dom@>=16.8.1:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.8.6.tgz#71d6303f631e8b0097f56165ef608f051ff6e10f"
   integrity sha512-1nL7PIq9LTL3fthPqwkvr2zY7phIPjYrT0jp4HjyEQrEROnw4dG41VVwi/wfoCneoleqrNX7iAD+pXebJZwrwA==
@@ -8547,7 +8552,7 @@ react-scripts@3.0.1:
   optionalDependencies:
     fsevents "2.0.6"
 
-react@^16.8.6:
+react@16.8.6, react@>=16.8.1:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
   integrity sha512-pC0uMkhLaHm11ZSJULfOBqV4tIZkx87ZLvbbQYunNixAAvjnC+snJCg0XQXn9VIsttVsbZP/H/ewzgsd5fxKXw==
@@ -8628,6 +8633,14 @@ realpath-native@^1.1.0:
   integrity sha512-wlgPA6cCIIg9gKz0fgAPjnzh4yR/LnXovwuo9hvyGvx3h8nX4+/iLZplfUWasXpqD8BdnGnP5njOFjkUwPzvjA==
   dependencies:
     util.promisify "^1.0.0"
+
+reason-react@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/reason-react/-/reason-react-0.7.0.tgz#46a975c321e81cd51310d7b1a02418ca7667b0d6"
+  integrity sha512-czR/f0lY5iyLCki9gwftOFF5Zs40l7ZSFmpGK/Z6hx2jBVeFDmIiXB8bAQW/cO6IvtuEt97OmsYueiuOYG9XjQ==
+  dependencies:
+    react ">=16.8.1"
+    react-dom ">=16.8.1"
 
 recursive-readdir@2.2.2:
   version "2.2.2"

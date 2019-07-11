@@ -3,18 +3,23 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@dck/reason-react-navigation": "^1.0.1",
     "bs-css": "^9.0.1",
     "firebase": "^6.2.4",
     "lodash.map": "^4.6.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-scripts": "3.0.1",
+    "reason-react": "^0.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "bs:watch": "bsb -make-world -w",
+    "bs:build": "bsb -make-world",
+    "bs:clean": "bsb -clean-world"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -32,6 +37,6 @@
     ]
   },
   "devDependencies": {
-    "bs-platform": "5.0.6"
+    "bs-platform": "^5.0.6"
   }
 }
