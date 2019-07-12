@@ -1,15 +1,27 @@
 {
-  "name": "reason-scripts",
+  "name": "remote-downloader-web",
   "sources": [
     {
       "dir": "src",
       "subdirs": true
     }
   ],
-  "bs-dependencies": ["reason-react", "bs-css", "re-formality"],
+  "bs-dependencies": [
+    "reason-react",
+    "bs-css",
+    "@dck/reason-react-navigation",
+    "re-formality"
+  ],
   "reason": {
-    "react-jsx": 2
+    "react-jsx": 3
   },
-  "bsc-flags": ["-bs-super-errors"],
+  "warnings": {
+    "error": "+101"
+  },
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
   "refmt": 3
 }

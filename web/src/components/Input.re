@@ -1,5 +1,3 @@
-let component = "Input" |> ReasonReact.statelessComponent;
-
 [@bs.deriving jsConverter]
 type inputType = [
   | [@bs.as "text"] `Text
@@ -30,6 +28,7 @@ module Styles = {
     style([fontSize(px(14)), color(hex("F44336")), marginTop(px(5))]);
 };
 
+[@react.component]
 let make =
     (
       ~label=?,
@@ -42,63 +41,59 @@ let make =
       ~onBlur=?,
       ~onChange,
       ~error=?,
-      _children,
     ) => {
-  ...component,
-  render: _self => {
-    let inputValue =
-      switch (value) {
-      | None => ""
-      | Some(v) => v
-      };
-    let customContainerClassName =
-      switch (containerClassName) {
-      | None => ""
-      | Some(rules) => rules
-      };
-    let customInputClassName =
-      switch (inputClassName) {
-      | None => Styles.input
-      | Some(rules) => Styles.input ++ " " ++ rules
-      };
-    let customPlaceholder =
-      switch (placeholder) {
-      | None => ""
-      | Some(p) => p
-      };
-    let errorField =
-      switch (error) {
-      | None => ReasonReact.nullElement
-      | Some(err) => <div className=Styles.error> err </div>
-      };
-    let disabledAttr =
-      switch (disabled) {
-      | None => Js.false_
-      | Some(value) => value
-      };
-    let onBlurEvent =
-      switch (onBlur) {
-      | None => (_ => ())
-      | Some(e) => e
-      };
+  let inputValue =
+    switch (value) {
+    | None => ""
+    | Some(v) => v
+    };
+  let customContainerClassName =
+    switch (containerClassName) {
+    | None => ""
+    | Some(rules) => rules
+    };
+  let customInputClassName =
+    switch (inputClassName) {
+    | None => Styles.input
+    | Some(rules) => Styles.input ++ " " ++ rules
+    };
+  let customPlaceholder =
+    switch (placeholder) {
+    | None => ""
+    | Some(p) => p
+    };
+  let errorField =
+    switch (error) {
+    | None => React.null
+    | Some(err) => <div className=Styles.error> err </div>
+    };
+  let disabledAttr =
+    switch (disabled) {
+    | None => false
+    | Some(value) => value
+    };
+  let onBlurEvent =
+    switch (onBlur) {
+    | None => (_ => ())
+    | Some(e) => e
+    };
 
-    <div className=customContainerClassName>
-      {
-        switch (label) {
-        | None => ReasonReact.nullElement
-        | Some(l) => <label className=Styles.label> l </label>
-        }
+  <div className=customContainerClassName>
+    {
+      switch (label) {
+      | None => React.null
+      | Some(l) => <label className=Styles.label> l </label>
       }
-      <input
-        _type={inputTypeToJs(_type)}
-        placeholder=customPlaceholder
-        className=customInputClassName
-        value=inputValue
-        disabled=disabledAttr
-        onChange
-        onBlur=onBlurEvent
-      />
-      errorField
-    </div>;
-  },
+    }
+    <input
+      type_={inputTypeToJs(_type)}
+      placeholder=customPlaceholder
+      className=customInputClassName
+      value=inputValue
+      disabled=disabledAttr
+      onChange
+      onBlur=onBlurEvent
+    />
+    errorField
+  </div>;
 };

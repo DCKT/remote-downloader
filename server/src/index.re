@@ -115,7 +115,6 @@ let handleDownload = data => {
     ~onError,
   )
   |> Js.Promise.then_(data => {
-       Js.log(data);
        Firebase.Database.update(fileInstance, {"filepath": data##filepath})
        |> ignore;
        Js.Promise.resolve();

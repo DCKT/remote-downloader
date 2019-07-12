@@ -1,5 +1,3 @@
-let component = "Loader" |> ReasonReact.statelessComponent;
-
 type size =
   | Tiny
   | Small
@@ -10,8 +8,8 @@ module Styles = {
   open Css;
   let spin =
     Css.keyframes([
-      (0, [transform(rotate(deg(45)))]),
-      (100, [transform(rotate(deg(405)))]),
+      (0, [transform(rotate(deg(45.)))]),
+      (100, [transform(rotate(deg(405.)))]),
     ]);
   let loader = (~size: option(size), ~color: option(string)) => {
     let (containerSize, borderWidth) =
@@ -39,7 +37,7 @@ module Styles = {
       borderLeft(px(borderWidth), solid, rgba(24, 24, 24, 1.)),
       unsafe("borderLeftColor", loaderColor ++ " !important"),
       borderRadius(pct(100.)),
-      transform(rotate(deg(45))),
+      transform(rotate(deg(45.))),
       animationName(spin),
       animationDuration(1000),
       animationIterationCount(infinite),
@@ -47,22 +45,19 @@ module Styles = {
   };
 };
 
+[@react.component]
 let make =
     (
       ~isActive: bool,
       ~size: option(size)=?,
       ~color: option(string)=?,
       ~className: option(string)=?,
-      _children,
     ) => {
-  ...component,
-  render: _self => {
-    let defaultClassName = Styles.loader(~size, ~color);
-    let style =
-      switch (className) {
-      | None => defaultClassName
-      | Some(s) => defaultClassName ++ " " ++ s
-      };
-    isActive ? <div className=style /> : ReasonReact.nullElement;
-  },
+  let defaultClassName = Styles.loader(~size, ~color);
+  let style =
+    switch (className) {
+    | None => defaultClassName
+    | Some(s) => defaultClassName ++ " " ++ s
+    };
+  isActive ? <div className=style /> : React.null;
 };

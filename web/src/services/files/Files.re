@@ -30,7 +30,7 @@ let add = (~url: string, ~extract: bool) => {
       "progress": 0,
       "size": 0,
       "url": url,
-      "extract": extract |> bool.to_js_boolean,
+      "extract": extract,
       "status": "waiting",
     }),
   )

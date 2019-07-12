@@ -1,5 +1,3 @@
-let component = "DownloadItem" |> ReasonReact.statelessComponent;
-
 module Styles = {
   open Css;
   let root =
@@ -16,8 +14,8 @@ module Styles = {
       fontSize(px(16)),
       color(Colors.black),
       textTransform(uppercase),
-      fontWeight(700),
       marginBottom(px(15)),
+      fontWeight(`bold),
     ]);
   let progressBarContainer = style([display(`flex), alignItems(center)]);
   let progressBar = (~progress: float, ~status: option(Files.status)) => {
@@ -68,39 +66,33 @@ module Styles = {
   let deleteIcon = style([color(Colors.grey)]);
 };
 
-let make = (~file: Files.t, _children) => {
-  ...component,
-  render: _self => {
-    let progress =
-      float_of_int(file##progress) /. float_of_int(file##size) *. 100.;
-    <div className=Styles.root>
-      <button
-        className=Styles.deleteButton
-        onClick=(_event => Files.remove(~id=file##id))>
-        <i className=("material-icons " ++ Styles.deleteIcon)>
-          (ReasonReact.stringToElement("delete_forever"))
-        </i>
-      </button>
-      <h1 className=Styles.title>
-        (file##filename |> ReasonReact.stringToElement)
-      </h1>
-      <div className=Styles.progressBarContainer>
-        <div
-          className=(
-            Styles.progressBar(
-              ~progress,
-              ~status=Files.statusFromJs(file##status),
-            )
+[@react.component]
+let make = (~file: Files.t) => {
+  let progress =
+    float_of_int(file##progress) /. float_of_int(file##size) *. 100.;
+  Js.log(progress);
+  <div className=Styles.root>
+    <button
+      className=Styles.deleteButton
+      onClick={_event => Files.remove(~id=file##id)}>
+      <i className={"material-icons " ++ Styles.deleteIcon}>
+        {React.string("delete_forever")}
+      </i>
+    </button>
+    <h1 className=Styles.title> {file##filename |> React.string} </h1>
+    <div className=Styles.progressBarContainer>
+      <div
+        className={
+          Styles.progressBar(
+            ~progress,
+            ~status=Files.statusFromJs(file##status),
           )
-        />
-        <div className=Styles.progress>
-          (
-            Js.Float.toFixedWithPrecision(progress, ~digits=2)
-            |> ReasonReact.stringToElement
-          )
-          (ReasonReact.stringToElement("%"))
-        </div>
+        }
+      />
+      <div className=Styles.progress>
+        {Js.Float.toFixedWithPrecision(progress, ~digits=2) |> React.string}
+        {React.string("%")}
       </div>
-    </div>;
-  },
+    </div>
+  </div>;
 };

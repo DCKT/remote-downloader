@@ -1,5 +1,3 @@
-let component = "Navbar" |> ReasonReact.statelessComponent;
-
 module Styles = {
   open Css;
   let root =
@@ -15,7 +13,7 @@ module Styles = {
     style([
       fontSize(px(22)),
       textTransform(uppercase),
-      fontWeight(700),
+      fontWeight(`bold),
       color(Colors.grey),
     ]);
   let addButton =
@@ -23,7 +21,7 @@ module Styles = {
       position(absolute),
       right(px(20)),
       fontSize(px(20)),
-      fontWeight(700),
+      fontWeight(`bold),
       border(px(2), solid, Colors.grey),
       borderRadius(px(3)),
       color(Colors.grey),
@@ -31,15 +29,11 @@ module Styles = {
     ]);
 };
 
-let make = (~showModal, _children) => {
-  ...component,
-  render: _self =>
-    <nav className=Styles.root>
-      <h1 className=Styles.title>
-        (ReasonReact.stringToElement("Downloads"))
-      </h1>
-      <button className=Styles.addButton onClick=showModal>
-        (ReasonReact.stringToElement("+"))
-      </button>
-    </nav>,
-};
+[@react.component]
+let make = (~showModal) =>
+  <nav className=Styles.root>
+    <h1 className=Styles.title> {React.string("Downloads")} </h1>
+    <button className=Styles.addButton onClick=showModal>
+      {React.string("+")}
+    </button>
+  </nav>;

@@ -1,26 +1,43 @@
 {
-  "name": "web",
+  "name": "web-2",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bs-css": "^6.5.0",
-    "firebase": "^4.12.0",
+    "@dck/reason-react-navigation": "^1.0.1",
+    "bs-css": "^9.0.1",
+    "firebase": "^6.2.4",
     "lodash.map": "^4.6.0",
-    "re-formality": "^0.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "reason-scripts": "0.8.0"
+    "re-formality": "3.0.0",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-scripts": "3.0.1",
+    "reason-react": "^0.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prepare": "npm link bs-platform",
-    "deploy": "npm run build && firebase deploy"
+    "bs:watch": "bsb -make-world -w",
+    "bs:build": "bsb -make-world",
+    "bs:clean": "bsb -clean-world"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
   "devDependencies": {
-    "bs-jest": "^0.3.2",
-    "reason-react": "^0.3.4"
+    "bs-platform": "^5.0.6"
   }
 }

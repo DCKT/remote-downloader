@@ -2,10 +2,11 @@
 .merlin
 .bsb.lock
 npm-debug.log
-/lib/bs/
+/lib
 /node_modules/
 *.bs.js
 
 server/node_modules/
 
 src/firebase/data/*
+download/

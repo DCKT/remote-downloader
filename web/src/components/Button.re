@@ -1,5 +1,3 @@
-let component = "Button" |> ReasonReact.statelessComponent;
-
 [@bs.deriving jsConverter]
 type buttonType = [ | [@bs.as "button"] `Button | [@bs.as "submit"] `Submit];
 
@@ -34,6 +32,7 @@ module Styles = {
   };
 };
 
+[@react.component]
 let make =
     (
       ~_type: buttonType,
@@ -41,34 +40,30 @@ let make =
       ~backgroundColor: option(string)=?,
       ~color: option(string)=?,
       ~disabled: option(bool)=?,
-      ~content: ReasonReact.reactElement,
+      ~content: React.element,
       ~onClick=?,
-      _children,
     ) => {
-  ...component,
-  render: _self => {
-    let defaultClassName = Styles.root(~backgroundColor, ~color);
-    let buttonStyle =
-      switch (className) {
-      | None => defaultClassName
-      | Some(style) => defaultClassName ++ " " ++ style
-      };
-    let onClickEvent =
-      switch (onClick) {
-      | None => (_event => ())
-      | Some(e) => e
-      };
-    let disabledOption =
-      switch (disabled) {
-      | None => Js.false_
-      | Some(v) => v
-      };
-    <button
-      onClick=onClickEvent
-      _type={buttonTypeToJs(_type)}
-      className=buttonStyle
-      disabled=disabledOption>
-      content
-    </button>;
-  },
+  let defaultClassName = Styles.root(~backgroundColor, ~color);
+  let buttonStyle =
+    switch (className) {
+    | None => defaultClassName
+    | Some(style) => defaultClassName ++ " " ++ style
+    };
+  let onClickEvent =
+    switch (onClick) {
+    | None => (_event => ())
+    | Some(e) => e
+    };
+  let disabledOption =
+    switch (disabled) {
+    | None => false
+    | Some(v) => v
+    };
+  <button
+    onClick=onClickEvent
+    type_={buttonTypeToJs(_type)}
+    className=buttonStyle
+    disabled=disabledOption>
+    content
+  </button>;
 };

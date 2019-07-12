@@ -23,13 +23,30 @@ module RouterConfig = {
 
 module Router = CreateRouter(RouterConfig);
 
-module PrivateOnly = {
+module AdminOnly = {
   [@react.component]
   let make = (~authenticated: bool, ~children) => {
     React.useEffect1(
       () => {
         if (!authenticated) {
-          Router.replace(Login);
+          Router.navigate(Login);
+        };
+        None;
+      },
+      [|authenticated|],
+    );
+
+    children;
+  };
+};
+
+module AnonymousOnly = {
+  [@react.component]
+  let make = (~authenticated: bool, ~children) => {
+    React.useEffect1(
+      () => {
+        if (authenticated) {
+          Router.replace(Admin);
         };
         None;
       },
@@ -50,10 +67,10 @@ let make = () => {
       Firebase.Authentication.onAuthStateChanged(
         Firebase.authInstance,
         user => {
-          setAppSync(_ => true);
           setAuthenticated(_ =>
             user->Js.Nullable.toOption->Belt.Option.isSome
           );
+          setAppSync(_ => true);
         },
       )
       |> ignore;
@@ -69,11 +86,18 @@ let make = () => {
            (~currentRoute) =>
              switch (currentRoute) {
              | RouterConfig.Login =>
-               <LoginScreen
-                 onLoginSuccess=(() => setAuthenticated(_ => true))
-               />
+               <AnonymousOnly authenticated>
+                 <LoginScreen
+                   onLoginSuccess=(
+                     () => {
+                       Router.navigate(Admin);
+                       setAuthenticated(_ => true);
+                     }
+                   )
+                 />
+               </AnonymousOnly>
              | RouterConfig.Admin =>
-               <PrivateOnly authenticated> <AdminScreen /> </PrivateOnly>
+               <AdminOnly authenticated> <AdminScreen /> </AdminOnly>
              | _ => <NotFound />
              }
          }
