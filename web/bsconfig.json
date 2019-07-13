@@ -10,7 +10,8 @@
     "reason-react",
     "bs-css",
     "@dck/reason-react-navigation",
-    "re-formality"
+    "re-formality",
+    "@dck/spacer-web"
   ],
   "reason": {
     "react-jsx": 3

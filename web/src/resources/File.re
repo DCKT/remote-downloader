@@ -6,15 +6,15 @@ type status = [
   | [@bs.as "error"] `error
 ];
 
+[@bs.deriving abstract]
 type t = {
-  .
-  "extract": bool,
-  "folder": string,
-  "id": string,
-  "progress": int,
-  "status": string,
-  "filename": string,
-  "size": int,
+  extract: bool,
+  folder: string,
+  id: string,
+  progress: int,
+  status: string,
+  filename: string,
+  size: int,
 };
 
 [@bs.val] external dateNow: unit => int = "Date.now";

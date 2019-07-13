@@ -18,7 +18,7 @@ module Styles = {
       fontWeight(`bold),
     ]);
   let progressBarContainer = style([display(`flex), alignItems(center)]);
-  let progressBar = (~progress: float, ~status: option(Files.status)) => {
+  let progressBar = (~progress: float, ~status: option(File.status)) => {
     let barColor =
       switch (status) {
       | None => Colors.grey
@@ -67,25 +67,27 @@ module Styles = {
 };
 
 [@react.component]
-let make = (~file: Files.t) => {
+let make = (~file: File.t) => {
   let progress =
-    float_of_int(file##progress) /. float_of_int(file##size) *. 100.;
+    float_of_int(file->File.progressGet)
+    /. float_of_int(file->File.sizeGet)
+    *. 100.;
   Js.log(progress);
   <div className=Styles.root>
     <button
       className=Styles.deleteButton
-      onClick={_event => Files.remove(~id=file##id)}>
+      onClick={_event => File.remove(~id=file->File.idGet)}>
       <i className={"material-icons " ++ Styles.deleteIcon}>
         {React.string("delete_forever")}
       </i>
     </button>
-    <h1 className=Styles.title> {file##filename |> React.string} </h1>
+    <h1 className=Styles.title> file->File.filenameGet->React.string </h1>
     <div className=Styles.progressBarContainer>
       <div
         className={
           Styles.progressBar(
             ~progress,
-            ~status=Files.statusFromJs(file##status),
+            ~status=File.statusFromJs(file->File.statusGet),
           )
         }
       />

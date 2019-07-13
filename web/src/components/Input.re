@@ -1,3 +1,5 @@
+open Belt;
+
 [@bs.deriving jsConverter]
 type inputType = [
   | [@bs.as "text"] `Text
@@ -41,44 +43,20 @@ let make =
       ~onBlur=?,
       ~onChange,
       ~error=?,
+      ~id: option(string)=?,
     ) => {
-  let inputValue =
-    switch (value) {
-    | None => ""
-    | Some(v) => v
-    };
-  let customContainerClassName =
-    switch (containerClassName) {
-    | None => ""
-    | Some(rules) => rules
-    };
   let customInputClassName =
     switch (inputClassName) {
     | None => Styles.input
     | Some(rules) => Styles.input ++ " " ++ rules
-    };
-  let customPlaceholder =
-    switch (placeholder) {
-    | None => ""
-    | Some(p) => p
     };
   let errorField =
     switch (error) {
     | None => React.null
     | Some(err) => <div className=Styles.error> err </div>
     };
-  let disabledAttr =
-    switch (disabled) {
-    | None => false
-    | Some(value) => value
-    };
-  let onBlurEvent =
-    switch (onBlur) {
-    | None => (_ => ())
-    | Some(e) => e
-    };
 
-  <div className=customContainerClassName>
+  <div className=containerClassName->Belt.Option.getWithDefault("")>
     {
       switch (label) {
       | None => React.null
@@ -86,13 +64,14 @@ let make =
       }
     }
     <input
-      type_={inputTypeToJs(_type)}
-      placeholder=customPlaceholder
-      className=customInputClassName
-      value=inputValue
-      disabled=disabledAttr
       onChange
-      onBlur=onBlurEvent
+      id=id->Option.getWithDefault("")
+      type_={inputTypeToJs(_type)}
+      placeholder=placeholder->Option.getWithDefault("")
+      className=customInputClassName
+      value=value->Option.getWithDefault("")
+      disabled=disabled->Option.getWithDefault(false)
+      onBlur=onBlur->Option.getWithDefault(_ => ())
     />
     errorField
   </div>;

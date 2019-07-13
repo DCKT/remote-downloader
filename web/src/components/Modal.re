@@ -25,7 +25,7 @@ module Styles = {
     style([
       position(relative),
       background(hex("fff")),
-      padding(px(40)),
+      padding2(~v=px(30), ~h=px(40)),
       boxShadow(~x=px(1), ~y=px(3), ~blur=px(4), rgba(24, 24, 24, 0.2)),
       width(pct(100.)),
       maxWidth(px(450)),
@@ -34,10 +34,9 @@ module Styles = {
     ]);
   let boxTitle =
     style([
-      fontSize(px(24)),
+      fontSize(px(28)),
       color(hex("333")),
       textAlign(center),
-      borderBottom(px(1), solid, hex("69798F")),
       paddingBottom(px(20)),
     ]);
   let boxForm = style([marginTop(px(20))]);
@@ -58,8 +57,9 @@ module Styles = {
       flexDirection(row),
       alignItems(center),
       justifyContent(center),
-      marginTop(px(20)),
     ]);
+
+  let label = style([display(`block), marginBottom(px(6))]);
 };
 
 module ModalForm = {
@@ -67,11 +67,13 @@ module ModalForm = {
 
   type field =
     | Link
+    | Filename
     | Zip;
 
   type state = {
     link: string,
-    zip: string,
+    filename: string,
+    zip: bool,
   };
 
   type message = string;
@@ -86,7 +88,22 @@ module ModalForm = {
       dependents: None,
       validate: ({link}) =>
         switch (link) {
-        | "" => Error("Email is required")
+        | "" => Error("Link is required")
+        | _ => Ok(Valid)
+        },
+    };
+  };
+
+  module FilenameField = {
+    let update = (state, value) => {...state, filename: value};
+
+    let validator = {
+      field: Link,
+      strategy: Strategy.OnFirstSuccessOrFirstBlur,
+      dependents: None,
+      validate: ({link}) =>
+        switch (link) {
+        | "" => Error("Filename is required")
         | _ => Ok(Valid)
         },
     };
@@ -96,12 +113,12 @@ module ModalForm = {
     let update = (state, value) => {...state, zip: value};
   };
 
-  let validators = [LinkField.validator];
+  let validators = [LinkField.validator, FilenameField.validator];
 };
 
 module ModalFormHook = Formality.Make(ModalForm);
 
-let initialState = ModalForm.{link: "", zip: ""};
+let initialState = ModalForm.{link: "", zip: false, filename: ""};
 
 [@react.component]
 let make = (~isVisible: bool, ~onClose) => {
@@ -109,7 +126,7 @@ let make = (~isVisible: bool, ~onClose) => {
     ModalFormHook.useForm(
       ~initialState,
       ~onSubmit=(state, form) => {
-        Files.add(~url=state.link, ~extract=state.zip === "on") |> ignore;
+        File.add(~url=state.link, ~extract=state.zip) |> ignore;
         form.notifyOnSuccess(None);
         onClose();
 
@@ -126,12 +143,16 @@ let make = (~isVisible: bool, ~onClose) => {
           <form
             className=Styles.boxForm
             onSubmit=form.submit->Formality.Dom.preventDefault>
+            <label htmlFor="link" className=Styles.label>
+              "Link :"->React.string
+            </label>
             <Input
               value={form.state.link}
               _type=`Text
               placeholder="Link"
               disabled={form.submitting}
               inputClassName=Styles.input
+              id="link"
               onChange={
                 event =>
                   form.change(
@@ -152,18 +173,49 @@ let make = (~isVisible: bool, ~onClose) => {
                 }
               }
             />
+            <Spacer height=10 />
+            <label htmlFor="name" className=Styles.label>
+              "Filename :"->React.string
+            </label>
+            <Input
+              value={form.state.link}
+              _type=`Text
+              placeholder="Filename"
+              disabled={form.submitting}
+              inputClassName=Styles.input
+              id="name"
+              onChange={
+                event =>
+                  form.change(
+                    Filename,
+                    ModalForm.FilenameField.update(
+                      form.state,
+                      event->ReactEvent.Form.target##value,
+                    ),
+                  )
+              }
+              onBlur={_ => form.blur(Filename)}
+              error={
+                switch (Filename->(form.result)) {
+                | Some(Error(message)) => message->React.string
+                | Some(Ok(Valid))
+                | Some(Ok(NoValue))
+                | None => React.null
+                }
+              }
+            />
             <div className=Styles.checkboxContainer>
               <input
                 id="zip"
                 type_="checkbox"
-                checked={form.state.zip == "on"}
+                checked={form.state.zip}
                 onChange={
                   event =>
                     form.change(
                       Zip,
                       ModalForm.ZipField.update(
                         form.state,
-                        event->ReactEvent.Form.target##value,
+                        event->ReactEvent.Form.target##checked,
                       ),
                     )
                 }
@@ -172,6 +224,7 @@ let make = (~isVisible: bool, ~onClose) => {
                 {React.string("Unzip after download")}
               </label>
             </div>
+            <Spacer height=25 />
             <div className=Styles.boxActions>
               <Button
                 _type=`Button

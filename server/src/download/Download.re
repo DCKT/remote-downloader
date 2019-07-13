@@ -21,7 +21,11 @@ type chunk = {. "length": int};
 
 type voidPromise = Js.Promise.t(unit);
 
-type moduleOptions = {. "extract": bool};
+[@bs.deriving abstract]
+type options = {
+  extract: bool,
+  filename: string,
+};
 
 type headers;
 
@@ -41,7 +45,7 @@ type t('a) = Js.Promise.t(downloadPromiseResponse);
 
 [@bs.module "download"]
 external customDownload:
-  (~url: string, ~folderPath: string, ~options: moduleOptions) => t('a) =
+  (~url: string, ~folderPath: string, ~options: options) => t('a) =
   "download";
 
 [@bs.module "download"] external getFilename: 'a => string = "getFilename";
@@ -64,13 +68,14 @@ let download =
     (
       ~url: string,
       ~folderPath: string,
+      ~filename: string,
       ~onResponse: res => unit,
       ~onData: chunk => unit,
       ~extract: bool,
       ~onEnd: unit => unit,
       ~onError: string => unit,
     ) =>
-  customDownload(~url, ~folderPath, ~options={"extract": extract})
+  customDownload(~url, ~folderPath, ~options=options(~extract, ~filename))
   |> on(`response(onResponse))
   |> on(`data(onData))
   |> on(`end_(onEnd))

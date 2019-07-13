@@ -4,14 +4,16 @@
   "private": true,
   "dependencies": {
     "@dck/reason-react-navigation": "^1.0.1",
-    "bs-css": "^9.0.1",
-    "firebase": "^6.2.4",
-    "lodash.map": "^4.6.0",
+    "@dck/spacer-web": "1.0.0",
+    "bs-css": "9.0.1",
+    "firebase": "6.3.0",
+    "framer-motion": "1.2.2",
+    "lodash.map": "4.6.0",
     "re-formality": "3.0.0",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "react-scripts": "3.0.1",
-    "reason-react": "^0.7.0"
+    "reason-react": "0.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,6 +40,6 @@
     ]
   },
   "devDependencies": {
-    "bs-platform": "^5.0.6"
+    "bs-platform": "5.0.6"
   }
 }

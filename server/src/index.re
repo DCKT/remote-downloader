@@ -109,6 +109,7 @@ let handleDownload = data => {
     ~url=data##url,
     ~folderPath=downloadFolderPath,
     ~extract=data##extract,
+    ~filename=data##filename,
     ~onData,
     ~onResponse,
     ~onEnd,
