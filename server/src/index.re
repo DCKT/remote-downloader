@@ -3,6 +3,7 @@ open BsLodash;
 open BsRimRaf;
 open BsMkdirp;
 open BsDiskUsage;
+open BsDownload;
 
 let unsafeFolderPath: Js.Nullable.t(string) = [%raw
   "process.env.DOWNLOAD_FOLDER_PATH"
@@ -37,10 +38,8 @@ Fs.readdir(downloadFolderPath, (err, folders) =>
     Js.log(e);
 
   | None =>
-    Firebase.Database.set(
-      foldersDB,
-      {"list": Js.Array.joinWith(",", folders)},
-    )
+    foldersDB
+    ->Firebase.Database.set({"list": Js.Array.joinWith(",", folders)})
     |> ignore
   }
 );
@@ -67,56 +66,67 @@ let handleDownload = data => {
   let fileInstance = Firebase.Database.child(filesDB, data##id);
   let downloadedContent = ref(0);
   let onData = chunk => {
-    downloadedContent := downloadedContent^ + chunk##length;
+    downloadedContent :=
+      downloadedContent^ + chunk->DownloadResponse.Chunk.length;
     updateProgress({"id": data##id, "progress": downloadedContent^});
     ();
   };
   let onResponse = res => {
     let contentLength =
-      Download.getContentLength(res##headers, "content-length")
+      res
+      ->DownloadResponse.headers
+      ->DownloadResponse.getContentLength("content-length")
       ->Js.Nullable.toOption
       ->Belt.Option.getWithDefault(0);
 
-    let filename = Download.getFilename(res);
+    res |> DownloadResponse.on(`data(onData)) |> ignore;
 
-    Firebase.Database.update(
-      fileInstance,
-      {
+    fileInstance
+    ->Firebase.Database.update({
         "size": contentLength,
-        "status": Download.statusToJs(`pending),
-        "filename": filename,
-      },
-    )
+        "status": DownloadStatus.tToJs(`pending),
+        "filename": data##filename,
+      })
     |> ignore;
     ();
   };
   let onEnd = () => {
-    Firebase.Database.update(
-      fileInstance,
-      {
-        "status": Download.statusToJs(`completed),
+    fileInstance
+    ->Firebase.Database.update({
+        "status": DownloadStatus.tToJs(`completed),
         "progress": downloadedContent^,
-      },
-    )
+      })
     |> ignore;
     ();
   };
   let onError = err => {
+    fileInstance
+    ->Firebase.Database.update({"status": DownloadStatus.tToJs(`error)})
+    |> ignore;
     Js.log(err);
     ();
   };
-  Download.download(
-    ~url=data##url,
-    ~folderPath=downloadFolderPath,
-    ~extract=data##extract,
-    ~filename=data##filename,
-    ~onData,
-    ~onResponse,
-    ~onEnd,
-    ~onError,
+
+  download(
+    data##url,
+    downloadFolderPath,
+    DownloadOptions.t(~extract=data##extract, ~filename=data##filename, ()),
   )
+  |> on(`response(onResponse))
+  |> on(`end_(onEnd))
+  |> on(`error(onError))
   |> Js.Promise.then_(data => {
-       Firebase.Database.update(fileInstance, {"filepath": data##filepath})
+       fileInstance
+       ->Firebase.Database.update({
+           "filepath": data->DownloadResponse.filepathGet,
+         })
+       |> ignore;
+       Js.Promise.resolve();
+     })
+  |> Js.Promise.catch(err => {
+       Js.log(err);
+       fileInstance
+       ->Firebase.Database.update({"status": DownloadStatus.tToJs(`error)})
        |> ignore;
        Js.Promise.resolve();
      })
@@ -124,12 +134,10 @@ let handleDownload = data => {
   ();
 };
 
-Firebase.Database.on(
-  filesDB,
-  ~eventType="child_added",
-  ~callback=snapshot => {
+filesDB
+->Firebase.Database.on(~eventType="child_added", ~callback=snapshot => {
     let data = Firebase.DataSnapshot.val_(snapshot);
-    let status = Download.statusFromJs(data##status);
+    let status = DownloadStatus.tFromJs(data##status);
     switch (status) {
     | None => ()
     | Some(t) =>
@@ -141,14 +149,10 @@ Firebase.Database.on(
       }
     };
     ();
-  },
-);
+  });
 
-Firebase.Database.on(
-  filesDB,
-  ~eventType="child_removed",
-  ~callback=snapshot => {
+filesDB
+->Firebase.Database.on(~eventType="child_removed", ~callback=snapshot => {
     let data = Firebase.DataSnapshot.val_(snapshot);
     removeFolder(data##filepath, () => ());
-  },
-);
+  });

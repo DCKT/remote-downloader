@@ -98,11 +98,11 @@ module ModalForm = {
     let update = (state, value) => {...state, filename: value};
 
     let validator = {
-      field: Link,
+      field: Filename,
       strategy: Strategy.OnFirstSuccessOrFirstBlur,
       dependents: None,
-      validate: ({link}) =>
-        switch (link) {
+      validate: ({filename}) =>
+        switch (filename) {
         | "" => Error("Filename is required")
         | _ => Ok(Valid)
         },
@@ -126,7 +126,12 @@ let make = (~isVisible: bool, ~onClose) => {
     ModalFormHook.useForm(
       ~initialState,
       ~onSubmit=(state, form) => {
-        File.add(~url=state.link, ~extract=state.zip) |> ignore;
+        File.add(
+          ~url=state.link,
+          ~filename=state.filename,
+          ~extract=state.zip,
+        )
+        |> ignore;
         form.notifyOnSuccess(None);
         onClose();
 
@@ -178,7 +183,7 @@ let make = (~isVisible: bool, ~onClose) => {
               "Filename :"->React.string
             </label>
             <Input
-              value={form.state.link}
+              value={form.state.filename}
               _type=`Text
               placeholder="Filename"
               disabled={form.submitting}

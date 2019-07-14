@@ -19,21 +19,23 @@ type t = {
 
 [@bs.val] external dateNow: unit => int = "Date.now";
 
-let add = (~url: string, ~extract: bool) => {
-  let id = dateNow();
-  let db = Firebase.App.database(Firebase.app);
-  let newRef = Firebase.Database.ref(db, "files/" ++ string_of_int(id));
-  Firebase.Database.set(
-    newRef,
-    Js.Nullable.return({
-      "id": id,
-      "progress": 0,
-      "size": 0,
-      "url": url,
-      "extract": extract,
-      "status": "waiting",
-    }),
-  )
+let add = (~url: string, ~filename: string, ~extract: bool) => {
+  let id = dateNow()->string_of_int;
+
+  Firebase.app
+  ->Firebase.App.database
+  ->Firebase.Database.ref("files/" ++ id)
+  ->Firebase.Database.set(
+      Js.Nullable.return({
+        "id": id,
+        "progress": 0,
+        "size": 0,
+        "url": url,
+        "extract": extract,
+        "status": "waiting",
+        "filename": filename,
+      }),
+    )
   |> ignore;
 };
 

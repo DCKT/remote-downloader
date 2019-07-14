@@ -54,9 +54,13 @@ let make = () => {
         |> React.array
       }
     </div>
-    <Modal
-      isVisible=isModalVisible
-      onClose={_ => setIsModalVisible(_ => false)}
-    />
+    {
+      isModalVisible ?
+        <Modal
+          isVisible=isModalVisible
+          onClose={_ => setIsModalVisible(_ => false)}
+        /> :
+        React.null
+    }
   </div>;
 };

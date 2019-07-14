@@ -35,19 +35,16 @@ module Styles = {
       background(Colors.progressBarBackground),
       height(px(5)),
       borderRadius(px(2)),
-      selector(
-        ":after",
-        [
-          unsafe("content", " "),
-          display(block),
-          width(pct(100.)),
-          height(pct(100.)),
-          background(barColor),
-          borderRadius(px(2)),
-          width(pct(progress)),
-          transition(~duration=1000, ~timingFunction=`ease, "all"),
-        ],
-      ),
+      after([
+        unsafe("content", "' '"),
+        display(`block),
+        width(pct(100.)),
+        height(pct(100.)),
+        background(barColor),
+        borderRadius(px(2)),
+        width(pct(progress)),
+        transition(~duration=1000, ~timingFunction=`ease, "all"),
+      ]),
     ]);
   };
   let progress =
@@ -72,6 +69,7 @@ let make = (~file: File.t) => {
     float_of_int(file->File.progressGet)
     /. float_of_int(file->File.sizeGet)
     *. 100.;
+
   Js.log(progress);
   <div className=Styles.root>
     <button
@@ -92,7 +90,11 @@ let make = (~file: File.t) => {
         }
       />
       <div className=Styles.progress>
-        {Js.Float.toFixedWithPrecision(progress, ~digits=2) |> React.string}
+        {
+          progress->Js.Float.isNaN ?
+            "0" |> React.string :
+            Js.Float.toFixedWithPrecision(progress, ~digits=2) |> React.string
+        }
         {React.string("%")}
       </div>
     </div>

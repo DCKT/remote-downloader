@@ -9,4 +9,4 @@ npm-debug.log
 server/node_modules/
 
 src/firebase/data/*
-download/
+./download/
